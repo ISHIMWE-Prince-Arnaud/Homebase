@@ -43,7 +43,7 @@ model User {
   name         String
   householdId  Int?
   household    Household? @relation(fields: [householdId], references: [id])
-  profileImage String     @default("https://avatar.iran.liara.run/public/1")
+ profileImage String @default(dbgenerated("'https://avatar.iran.liara.run/public/' || floor(random()*100 + 1)::int"))
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
