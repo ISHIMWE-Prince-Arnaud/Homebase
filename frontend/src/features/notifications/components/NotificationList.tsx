@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCheck, Bell } from "lucide-react";
 import { NotificationListSkeleton } from "@/components/ui/skeletons";
 import { StaggerContainer, StaggerItem, FadeIn } from "@/components/ui/motion";
+import { AnimatePresence } from "framer-motion";
 
 export function NotificationList() {
   const { notifications, isLoading, markRead, markAllRead, delete: deleteNotification, isMarkingRead, isDeleting } =
@@ -39,18 +40,20 @@ export function NotificationList() {
           </Button>
         </div>
       )}
-      <StaggerContainer className="space-y-2">
-        {notifications.map((notification) => (
-          <StaggerItem key={notification.id}>
-            <NotificationItem
-              notification={notification}
-              onMarkRead={markRead}
-              onDelete={deleteNotification}
-              isDeleting={isDeleting}
-            />
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+      <AnimatePresence mode="popLayout">
+        <StaggerContainer className="space-y-2">
+          {notifications.map((notification) => (
+            <StaggerItem key={notification.id}>
+              <NotificationItem
+                notification={notification}
+                onMarkRead={markRead}
+                onDelete={deleteNotification}
+                isDeleting={isDeleting}
+              />
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </AnimatePresence>
     </div>
   );
 }

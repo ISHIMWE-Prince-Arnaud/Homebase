@@ -24,12 +24,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface NotificationItemProps {
   notification: Notification;
   onMarkRead: (id: number) => void;
   onDelete: (id: number) => void;
   isDeleting?: boolean;
+  isNew?: boolean;
 }
 
 const getNotificationIcon = (type?: string): LucideIcon => {
@@ -57,13 +59,19 @@ export function NotificationItem({
   onMarkRead,
   onDelete,
   isDeleting,
+  isNew = false,
 }: NotificationItemProps) {
   const NotificationIcon = getNotificationIcon(notification.type);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (
     <>
-      <div
+      <motion.div
+        initial={isNew ? { scale: 0.95, opacity: 0 } : false}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0, x: 20 }}
+        whileHover={{ scale: 1.02, y: -2 }}
+        transition={{ duration: 0.2 }}
         className={cn(
           "group flex items-start gap-4 rounded-lg border p-4 transition-colors",
           notification.isRead ? "bg-background" : "bg-muted/50 border-primary/20"
@@ -110,7 +118,7 @@ export function NotificationItem({
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
