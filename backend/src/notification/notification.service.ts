@@ -22,6 +22,14 @@ export class NotificationService {
         OR: [{ userId: null }, { userId }],
       },
       orderBy: { createdAt: 'desc' },
+      include: {
+        actor: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
   }
 
@@ -60,9 +68,22 @@ export class NotificationService {
     message: string,
     type?: string,
     userId?: number,
+    actorId?: number,
+    entityType?: string,
+    entityId?: number,
+    action?: string,
   ) {
     const created = await this.prisma.notification.create({
-      data: { householdId, message, type, userId },
+      data: {
+        householdId,
+        message,
+        type,
+        userId,
+        actorId,
+        entityType,
+        entityId,
+        action,
+      },
     });
     if (userId) {
       this.realtime.emitToUser(userId, RealtimeEvents.NOTIFICATION_CREATED, {

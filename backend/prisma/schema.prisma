@@ -10,11 +10,16 @@ model Notification {
   message     String
   type        String?
   isRead      Boolean  @default(false)
+  actorId     Int?
+  entityType  String?
+  entityId    Int?
+  action      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   household Household @relation(fields: [householdId], references: [id])
   user      User?     @relation(fields: [userId], references: [id])
+  actor     User?     @relation("NotificationActor", fields: [actorId], references: [id])
 }
 
 model Payment {
@@ -56,6 +61,7 @@ model User {
   paymentsMade     Payment[]            @relation("PaymentsMade")
   paymentsReceived Payment[]            @relation("PaymentsReceived")
   notifications    Notification[]
+  actedNotifications Notification[]     @relation("NotificationActor")
 }
 
 model Household {
