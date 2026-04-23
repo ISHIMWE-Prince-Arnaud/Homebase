@@ -158,14 +158,15 @@ export class HouseholdService {
       { userId },
     );
     // Notification to household members about new member
-    const actor = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true },
-    });
     await this.notifications.create(
       result!.id,
-      `${actor?.name ?? 'A member'} joined the household`,
+      'joined the household',
       'household_invite',
+      undefined,
+      userId,
+      'household',
+      result!.id,
+      'joined',
     );
     return result;
   }

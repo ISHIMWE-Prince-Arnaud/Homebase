@@ -158,9 +158,13 @@ export class PaymentService {
     // Personal notification to receiver
     await this.notifications.create(
       householdId,
-      `${fromUser.name ?? 'A member'} paid ${toUser.name ?? 'A member'} ${amount}`,
+      'paid',
       'payment_received',
       toUserId,
+      fromUserId,
+      'payment',
+      payment.id,
+      'paid',
     );
 
     // realtime events: payment recorded and balance updated

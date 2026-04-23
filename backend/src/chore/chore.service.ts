@@ -51,15 +51,15 @@ export class ChoreService {
     });
     // Notification if assigned to a user
     if (dto.assignedToId) {
-      const actor = await this.prisma.user.findUnique({
-        where: { id: userId },
-        select: { name: true },
-      });
       await this.notifications.create(
         householdId,
-        `${actor?.name ?? 'A member'} assigned you chore: ${dto.title}`,
+        'assigned you chore',
         'chore_assigned',
         dto.assignedToId,
+        userId,
+        'chore',
+        created.id,
+        'assigned',
       );
     }
     this.realtime.emitToHousehold(householdId, RealtimeEvents.CHORE_CREATED, {

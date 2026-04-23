@@ -33,14 +33,15 @@ export class NeedService {
       },
     });
     // fire-and-forget notification
-    const actor = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true },
-    });
     await this.notifications.create(
       householdId,
-      `${actor?.name ?? 'A member'} added ${dto.name}`,
+      'added',
       'need_added',
+      undefined,
+      userId,
+      'need',
+      created.id,
+      'added',
     );
     this.realtime.emitToHousehold(householdId, RealtimeEvents.NEED_ITEM_ADDED, {
       need: created,
@@ -168,14 +169,15 @@ export class NeedService {
     });
 
     // notifications (after commit)
-    const actor = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true },
-    });
     await this.notifications.create(
       householdId,
-      `${actor?.name ?? 'A member'} purchased ${result.need?.name ?? 'an item'}`,
+      'purchased',
       'need_purchased',
+      undefined,
+      userId,
+      'need',
+      result.need?.id,
+      'purchased',
     );
     if (result.need) {
       this.realtime.emitToHousehold(
@@ -189,8 +191,13 @@ export class NeedService {
     if (result.expenseId) {
       await this.notifications.create(
         householdId,
-        `${actor?.name ?? 'A member'} created expense ${result.expenseDescription} (#${result.expenseId})`,
+        'created expense',
         'expense_added',
+        undefined,
+        userId,
+        'expense',
+        result.expenseId,
+        'created',
       );
       this.realtime.emitToHousehold(
         householdId,

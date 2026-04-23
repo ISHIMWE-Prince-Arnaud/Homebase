@@ -88,14 +88,15 @@ export class ExpenseService {
       include: { participants: true },
     });
     // Notification (fire-and-forget)
-    const actor = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true },
-    });
     await this.notifications.create(
       householdId,
-      `${actor?.name ?? 'A member'} created expense ${dto.description}`,
+      'created expense',
       'expense_added',
+      undefined,
+      userId,
+      'expense',
+      created.id,
+      'created',
     );
     this.realtime.emitToHousehold(householdId, RealtimeEvents.EXPENSE_CREATED, {
       expense: created,
