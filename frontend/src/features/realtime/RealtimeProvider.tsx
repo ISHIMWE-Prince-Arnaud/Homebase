@@ -49,10 +49,13 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
 
         // Show toast for new notifications
         if (event === RealtimeEvents.NOTIFICATION_CREATED && data.notification) {
-          showToast.success(
-            "New notification",
-            data.notification.message
-          );
+          // Only show toast if it's for the current user or household-wide
+          if (data.notification.userId === null || data.notification.userId === user.id) {
+            showToast.success(
+              "New notification",
+              data.notification.message
+            );
+          }
         }
 
         // Invalidate queries
