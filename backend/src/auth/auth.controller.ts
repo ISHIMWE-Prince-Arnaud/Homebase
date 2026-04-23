@@ -8,11 +8,13 @@ import type { Request } from 'express';
 import type { Response } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserId } from 'src/common/decorators/user-id.decorator';
+import { AuthThrottlerGuard, ProfileUpdateThrottlerGuard } from 'src/common/guards/throttler.guards';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(AuthThrottlerGuard)
   @Post('register')
   async register(
     @Body() registerUserDto: RegisterUserDto,
@@ -27,10 +29,12 @@ export class AuthController {
       sameSite: isProd ? 'none' : 'lax',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      domain: isProd ? undefined : 'localhost',
     });
     return { user };
   }
 
+  @UseGuards(AuthThrottlerGuard)
   @Post('login')
   async login(
     @Body() loginUserDto: LoginUserDto,
@@ -44,6 +48,7 @@ export class AuthController {
       sameSite: isProd ? 'none' : 'lax',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      domain: isProd ? undefined : 'localhost',
     });
     return { user };
   }
@@ -59,7 +64,7 @@ export class AuthController {
     return this.authService.getProfile(req.user.id);
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, ProfileUpdateThrottlerGuard)
   @Patch('users/me')
   updateProfile(
     @UserId() userId: number,
@@ -81,6 +86,7 @@ export class AuthController {
       secure: isProd,
       sameSite: isProd ? 'none' : 'lax',
       path: '/',
+      domain: isProd ? undefined : 'localhost',
     });
     return { message: 'Logged out' };
   }
