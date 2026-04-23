@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { EventQueryKeys, RealtimeEvents } from "./events";
 import { RealtimeContext } from "./context";
+import { showToast } from "@/lib/toast";
 
 export function RealtimeProvider({ children }: { children: React.ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -45,6 +46,14 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     Object.values(RealtimeEvents).forEach((event) => {
       newSocket.on(event, (data) => {
         console.log(`Received event: ${event}`, data);
+
+        // Show toast for new notifications
+        if (event === RealtimeEvents.NOTIFICATION_CREATED && data.notification) {
+          showToast.success(
+            "New notification",
+            data.notification.message
+          );
+        }
 
         // Invalidate queries
         const queryKeys = EventQueryKeys[event];

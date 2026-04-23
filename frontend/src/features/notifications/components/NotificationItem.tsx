@@ -65,7 +65,7 @@ export function NotificationItem({
     <>
       <div
         className={cn(
-          "flex items-start gap-4 rounded-lg border p-4 transition-colors",
+          "group flex items-start gap-4 rounded-lg border p-4 transition-colors",
           notification.isRead ? "bg-background" : "bg-muted/50 border-primary/20"
         )}>
         <div
@@ -89,7 +89,7 @@ export function NotificationItem({
             {new Date(notification.createdAt).toLocaleString()}
           </p>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
           {!notification.isRead && (
             <Button
               variant="ghost"
@@ -105,7 +105,8 @@ export function NotificationItem({
             size="icon"
             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
             onClick={() => setShowDeleteDialog(true)}
-            title="Delete notification">
+            title="Delete notification"
+            disabled={isDeleting}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
