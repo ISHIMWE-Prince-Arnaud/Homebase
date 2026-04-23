@@ -14,6 +14,7 @@ import { NotificationModule } from './notification/notification.module';
 import { RealtimeModule } from './realtime/realtime.module';
 import { ThrottlerConfigModule } from './common/security/throttler.module';
 import { ApiThrottlerGuard } from './common/guards/throttler.guards';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ApiThrottlerGuard } from './common/guards/throttler.guards';
     PaymentModule,
     NotificationModule,
     RealtimeModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [

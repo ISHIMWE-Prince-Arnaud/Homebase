@@ -14,6 +14,10 @@ export class RealtimeService {
     this.logger.log('Realtime server registered');
   }
 
+  getServer(): Server | undefined {
+    return this.server;
+  }
+
   emitToHousehold(householdId: number, event: RealtimeEvent, payload: unknown) {
     if (!this.server || !householdId) {
       return;
