@@ -6,7 +6,7 @@ import { NotificationListSkeleton } from "@/components/ui/skeletons";
 import { StaggerContainer, StaggerItem, FadeIn } from "@/components/ui/motion";
 
 export function NotificationList() {
-  const { notifications, isLoading, markRead, markAllRead, isMarkingRead } =
+  const { notifications, isLoading, markRead, markAllRead, delete: deleteNotification, isMarkingRead, isDeleting } =
     useNotifications();
 
   if (isLoading) {
@@ -45,6 +45,8 @@ export function NotificationList() {
             <NotificationItem
               notification={notification}
               onMarkRead={markRead}
+              onDelete={deleteNotification}
+              isDeleting={isDeleting}
             />
           </StaggerItem>
         ))}

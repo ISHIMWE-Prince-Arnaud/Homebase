@@ -32,12 +32,25 @@ export const useNotifications = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: notificationsApi.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      showToast.success("Deleted", "Notification deleted successfully.");
+    },
+  });
+
+  const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
+
   return {
     notifications,
     isLoading,
     error,
+    unreadCount,
     markRead: markReadMutation.mutate,
     markAllRead: markAllReadMutation.mutate,
+    delete: deleteMutation.mutate,
     isMarkingRead: markReadMutation.isPending || markAllReadMutation.isPending,
+    isDeleting: deleteMutation.isPending,
   };
 };

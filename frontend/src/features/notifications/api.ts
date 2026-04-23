@@ -22,4 +22,7 @@ export const notificationsApi = {
   markAllRead: async () => {
     await api.patch("/notifications/read-all");
   },
+  delete: async (id: number) => {
+    await api.delete(`/notifications/${id}`);
+  },
 };

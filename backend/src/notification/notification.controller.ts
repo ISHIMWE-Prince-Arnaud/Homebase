@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Patch, Param, UseGuards } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { HouseholdId } from 'src/common/decorators/household-id.decorator';
@@ -32,5 +32,17 @@ export class NotificationController {
    */
   markAll(@HouseholdId() householdId: number, @UserId() userId: number) {
     return this.notificationService.markAllRead(householdId, userId);
+  }
+
+  @Delete(':id')
+  /**
+   * WebSocket: emits 'notifications:read' to household room with { deleted: true, id }.
+   */
+  delete(
+    @HouseholdId() householdId: number,
+    @Param('id') id: string,
+    @UserId() userId: number,
+  ) {
+    return this.notificationService.delete(householdId, Number(id), userId);
   }
 }

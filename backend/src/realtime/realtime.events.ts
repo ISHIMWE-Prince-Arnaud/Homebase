@@ -18,6 +18,7 @@ export const RealtimeEvents = {
   PAYMENT_RECORDED: 'payments:recorded',
   NOTIFICATION_CREATED: 'notifications:created',
   NOTIFICATION_READ: 'notifications:read',
+  NOTIFICATION_DELETED: 'notifications:deleted',
   HOUSEHOLD_MEMBER_JOINED: 'household:memberJoined',
   HOUSEHOLD_MEMBER_LEFT: 'household:memberLeft',
   HOUSEHOLD_DELETED: 'household:deleted',

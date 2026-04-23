@@ -101,4 +101,24 @@ export class NotificationService {
     );
     return res;
   }
+
+  async delete(householdId: number, id: number, userId: number) {
+    const deleted = await this.prisma.notification.deleteMany({
+      where: {
+        id,
+        householdId,
+        OR: [{ userId: null }, { userId }],
+      },
+    });
+    if (deleted.count === 0)
+      throw new NotFoundException('Notification not found');
+
+    // Emit deletion event to household
+    this.realtime.emitToHousehold(
+      householdId,
+      RealtimeEvents.NOTIFICATION_DELETED,
+      { id },
+    );
+    return deleted;
+  }
 }
