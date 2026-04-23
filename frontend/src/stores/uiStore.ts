@@ -5,6 +5,7 @@ interface UIState {
   isSidebarOpen: boolean;
   theme: "light" | "dark" | "system";
   isNotificationOpen: boolean;
+  isSidebarCollapsed: boolean;
 
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
@@ -13,6 +14,9 @@ interface UIState {
 
   toggleNotification: () => void;
   setNotificationOpen: (open: boolean) => void;
+
+  toggleSidebarCollapsed: () => void;
+  setSidebarCollapsed: (collapsed: boolean) => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -21,6 +25,7 @@ export const useUIStore = create<UIState>()(
       isSidebarOpen: false, // Mobile sidebar default closed
       theme: "system",
       isNotificationOpen: false,
+      isSidebarCollapsed: false, // Desktop sidebar default expanded
 
       toggleSidebar: () =>
         set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
@@ -47,10 +52,14 @@ export const useUIStore = create<UIState>()(
       toggleNotification: () =>
         set((state) => ({ isNotificationOpen: !state.isNotificationOpen })),
       setNotificationOpen: (open) => set({ isNotificationOpen: open }),
+
+      toggleSidebarCollapsed: () =>
+        set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
+      setSidebarCollapsed: (collapsed) => set({ isSidebarCollapsed: collapsed }),
     }),
     {
       name: "ui-storage", // unique name for localStorage key
-      partialize: (state) => ({ theme: state.theme }), // Only persist theme
+      partialize: (state) => ({ theme: state.theme, isSidebarCollapsed: state.isSidebarCollapsed }), // Persist theme and sidebar collapse state
     }
   )
 );

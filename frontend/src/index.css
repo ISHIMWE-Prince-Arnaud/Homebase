@@ -90,4 +90,12 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60;
   }
+
+  .nav-item-transition {
+    @apply transition-all duration-150 ease-out;
+  }
+
+  .micro-bounce {
+    @apply active:scale-95 transition-transform duration-100;
+  }
 }
