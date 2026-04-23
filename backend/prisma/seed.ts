@@ -307,31 +307,143 @@ async function main() {
   console.log('🔔 Creating notifications...');
   await prisma.notification.createMany({
     data: [
+      // chore_assigned notifications
       {
-        message: 'Welcome to The Cool Roommates, Alice!',
-        type: 'welcome',
-        isRead: true,
-        householdId: household.id,
-        userId: alice.id,
-      },
-      {
-        message: 'Bob has joined the household',
-        type: 'member_joined',
-        isRead: true,
-        householdId: household.id,
-        userId: alice.id,
-      },
-      {
-        message: 'Charlie has joined the household',
-        type: 'member_joined',
-        isRead: true,
-        householdId: household.id,
-        userId: alice.id,
-      },
-      {
-        message: 'You have been assigned: Clean the kitchen',
+        message: 'Alice assigned you chore: Clean the kitchen',
         type: 'chore_assigned',
         isRead: false,
+        householdId: household.id,
+        userId: alice.id,
+      },
+      {
+        message: 'Alice assigned you chore: Water plants',
+        type: 'chore_assigned',
+        isRead: true,
+        householdId: household.id,
+        userId: alice.id,
+      },
+      {
+        message: 'Bob assigned you chore: Take out trash',
+        type: 'chore_assigned',
+        isRead: false,
+        householdId: household.id,
+        userId: bob.id,
+      },
+      // expense_added notifications
+      {
+        message: 'Alice created expense Weekly grocery run',
+        type: 'expense_added',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Bob created expense Electric bill',
+        type: 'expense_added',
+        isRead: true,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Charlie created expense Pizza night',
+        type: 'expense_added',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      // payment_received notifications
+      {
+        message: 'Bob paid Alice 30',
+        type: 'payment_received',
+        isRead: false,
+        householdId: household.id,
+        userId: alice.id,
+      },
+      {
+        message: 'Charlie paid Bob 25',
+        type: 'payment_received',
+        isRead: true,
+        householdId: household.id,
+        userId: bob.id,
+      },
+      // household_invite notifications
+      {
+        message: 'Alice joined the household',
+        type: 'household_invite',
+        isRead: true,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Bob joined the household',
+        type: 'household_invite',
+        isRead: true,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Charlie joined the household',
+        type: 'household_invite',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      // need_added notifications
+      {
+        message: 'Alice added Milk',
+        type: 'need_added',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Bob added Bread',
+        type: 'need_added',
+        isRead: true,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Charlie added Dish soap',
+        type: 'need_added',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      // need_purchased notifications
+      {
+        message: 'Alice purchased Bread',
+        type: 'need_purchased',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Bob purchased Toilet paper',
+        type: 'need_purchased',
+        isRead: true,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Charlie purchased Coffee',
+        type: 'need_purchased',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      // system notifications
+      {
+        message: 'System maintenance scheduled for tonight',
+        type: 'system',
+        isRead: false,
+        householdId: household.id,
+        userId: null, // household-wide
+      },
+      {
+        message: 'Welcome to HomeBase!',
+        type: 'system',
+        isRead: true,
         householdId: household.id,
         userId: alice.id,
       },
@@ -347,7 +459,7 @@ async function main() {
   console.log('  - 5 expenses');
   console.log('  - 6 household needs');
   console.log('  - 2 payments');
-  console.log('  - 4 notifications');
+  console.log('  - 19 notifications (all types: chore_assigned, expense_added, payment_received, household_invite, need_added, need_purchased, system)');
   console.log('');
   console.log('🔑 All users have password: password123');
 }

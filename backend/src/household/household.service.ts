@@ -10,12 +10,14 @@ import { JoinHouseholdDto } from './dto/join-household.dto';
 import * as crypto from 'crypto';
 import { RealtimeService } from 'src/realtime/realtime.service';
 import { RealtimeEvents } from 'src/realtime/realtime.events';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class HouseholdService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly realtime: RealtimeService,
+    private readonly notifications: NotificationService,
   ) {}
 
   private generateInviteCode(length = 8): string {
@@ -154,6 +156,16 @@ export class HouseholdService {
       result!.id,
       RealtimeEvents.HOUSEHOLD_MEMBER_JOINED,
       { userId },
+    );
+    // Notification to household members about new member
+    const actor = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    });
+    await this.notifications.create(
+      result!.id,
+      `${actor?.name ?? 'A member'} joined the household`,
+      'household_invite',
     );
     return result;
   }

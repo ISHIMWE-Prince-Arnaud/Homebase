@@ -40,7 +40,7 @@ export class NeedService {
     await this.notifications.create(
       householdId,
       `${actor?.name ?? 'A member'} added ${dto.name}`,
-      'addedNeed',
+      'need_added',
     );
     this.realtime.emitToHousehold(householdId, RealtimeEvents.NEED_ITEM_ADDED, {
       need: created,
@@ -175,7 +175,7 @@ export class NeedService {
     await this.notifications.create(
       householdId,
       `${actor?.name ?? 'A member'} purchased ${result.need?.name ?? 'an item'}`,
-      'purchasedNeed',
+      'need_purchased',
     );
     if (result.need) {
       this.realtime.emitToHousehold(
@@ -190,7 +190,7 @@ export class NeedService {
       await this.notifications.create(
         householdId,
         `${actor?.name ?? 'A member'} created expense ${result.expenseDescription} (#${result.expenseId})`,
-        'createdExpense',
+        'expense_added',
       );
       this.realtime.emitToHousehold(
         householdId,

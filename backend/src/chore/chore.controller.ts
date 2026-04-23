@@ -13,6 +13,7 @@ import { CreateChoreDto } from './dto/create-chore.dto';
 import { UpdateChoreDto } from './dto/update-chore.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { HouseholdId } from 'src/common/decorators/household-id.decorator';
+import { UserId } from 'src/common/decorators/user-id.decorator';
 
 @UseGuards(JwtGuard)
 @Controller('chores')
@@ -28,8 +29,12 @@ export class ChoreController {
   /**
    * WebSocket: emits 'chores:created' to household room after creation.
    */
-  create(@HouseholdId() householdId: number, @Body() dto: CreateChoreDto) {
-    return this.choreService.createChore(householdId, dto);
+  create(
+    @HouseholdId() householdId: number,
+    @UserId() userId: number,
+    @Body() dto: CreateChoreDto,
+  ) {
+    return this.choreService.createChore(householdId, userId, dto);
   }
 
   @Patch(':id/complete')
@@ -60,9 +65,10 @@ export class ChoreController {
    */
   update(
     @HouseholdId() householdId: number,
+    @UserId() userId: number,
     @Param('id') id: string,
     @Body() dto: UpdateChoreDto,
   ) {
-    return this.choreService.updateChore(Number(id), householdId, dto);
+    return this.choreService.updateChore(Number(id), householdId, userId, dto);
   }
 }

@@ -95,7 +95,7 @@ export class ExpenseService {
     await this.notifications.create(
       householdId,
       `${actor?.name ?? 'A member'} created expense ${dto.description}`,
-      'createdExpense',
+      'expense_added',
     );
     this.realtime.emitToHousehold(householdId, RealtimeEvents.EXPENSE_CREATED, {
       expense: created,

@@ -159,7 +159,7 @@ export class PaymentService {
     await this.notifications.create(
       householdId,
       `${fromUser.name ?? 'A member'} paid ${toUser.name ?? 'A member'} ${amount}`,
-      'paymentReceived',
+      'payment_received',
       toUserId,
     );
 
