@@ -16,7 +16,7 @@ export interface AuthResponse {
   user: User;
 }
 
-interface BackendUser {
+export interface BackendUser {
   id: number;
   email: string;
   name?: string;
@@ -27,7 +27,7 @@ interface BackendUser {
   image?: string;
 }
 
-const toUser = (raw: BackendUser): User => ({
+export const toUser = (raw: BackendUser): User => ({
   id: raw.id,
   email: raw.email,
   name:
