@@ -59,7 +59,21 @@ const getNotificationIcon = (type?: string): LucideIcon => {
   }
 };
 
-const getNotificationPath = (type?: string): string => {
+const getNotificationPath = (type?: string, entityType?: string, entityId?: number): string => {
+  if (entityId && entityType) {
+    switch (entityType) {
+      case "chore":
+        return `/chores`;
+      case "expense":
+        return `/expenses`;
+      case "payment":
+        return `/payments`;
+      case "need":
+        return `/needs`;
+      default:
+        return "/notifications";
+    }
+  }
   switch (type) {
     case "chore_assigned":
       return "/chores";
@@ -109,7 +123,7 @@ export function NotificationItem({
 
   const isHouseholdWide = notification.userId === null;
   const isForCurrentUser = notification.userId === currentUserId;
-  const notificationPath = getNotificationPath(notification.type);
+  const notificationPath = getNotificationPath(notification.type, notification.entityType, notification.entityId);
   const actionLabel = getActionLabel(notification.type);
 
   const handleClick = () => {
@@ -174,7 +188,7 @@ export function NotificationItem({
                 "text-sm font-medium leading-none",
                 !notification.isRead && "font-semibold"
               )}>
-              {notification.message}
+              {notification.actor?.name ? `${notification.actor.name} ${notification.message}` : notification.message}
             </p>
             {isHouseholdWide && (
               <Badge variant="secondary" className="text-xs">

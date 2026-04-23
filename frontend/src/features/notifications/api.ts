@@ -7,6 +7,14 @@ export interface Notification {
   isRead: boolean;
   householdId: number;
   userId?: number;
+  actorId?: number;
+  actor?: {
+    id: number;
+    name: string;
+  };
+  entityType?: string;
+  entityId?: number;
+  action?: string;
   createdAt: string;
 }
 
