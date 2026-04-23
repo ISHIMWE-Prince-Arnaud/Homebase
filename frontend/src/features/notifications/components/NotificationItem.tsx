@@ -79,6 +79,22 @@ const getNotificationPath = (type?: string): string => {
   }
 };
 
+const getActionLabel = (type?: string): string | null => {
+  switch (type) {
+    case "chore_assigned":
+      return "View Chore";
+    case "expense_added":
+      return "View Expense";
+    case "payment_received":
+      return "View Payment";
+    case "need_added":
+    case "need_purchased":
+      return "View Need";
+    default:
+      return null;
+  }
+};
+
 export function NotificationItem({
   notification,
   onMarkRead,
@@ -94,12 +110,25 @@ export function NotificationItem({
   const isHouseholdWide = notification.userId === null;
   const isForCurrentUser = notification.userId === currentUserId;
   const notificationPath = getNotificationPath(notification.type);
+  const actionLabel = getActionLabel(notification.type);
 
   const handleClick = () => {
     navigate(notificationPath);
     if (!notification.isRead) {
       onMarkRead(notification.id);
     }
+  };
+
+  const handleAction = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(notificationPath);
+    if (!notification.isRead) {
+      onMarkRead(notification.id);
+    }
+  };
+
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
   };
 
   return (
@@ -109,10 +138,24 @@ export function NotificationItem({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0, x: 20 }}
         whileHover={{ scale: 1.02, y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        drag="x"
+        dragConstraints={{ left: -100, right: 100 }}
+        dragElastic={0.2}
+        onDragEnd={(_, { offset, velocity }) => {
+          const swipe = swipePower(offset.x, velocity.x);
+          if (swipe < -15000) {
+            // Swipe left - delete
+            setShowDeleteDialog(true);
+          } else if (swipe > 15000) {
+            // Swipe right - navigate/action
+            handleClick();
+          }
+        }}
         transition={{ duration: 0.2 }}
         onClick={handleClick}
         className={cn(
-          "group flex items-start gap-4 rounded-lg border p-4 transition-colors cursor-pointer",
+          "group flex items-start gap-4 rounded-lg border p-4 transition-colors cursor-pointer select-none touch-pan-x",
           notification.isRead ? "bg-background" : "bg-muted/50 border-primary/20"
         )}>
         <div
@@ -151,12 +194,24 @@ export function NotificationItem({
           </p>
         </div>
         <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+          {actionLabel && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 text-xs"
+              onClick={handleAction}>
+              {actionLabel}
+            </Button>
+          )}
           {!notification.isRead && (
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 shrink-0 text-muted-foreground hover:text-primary"
-              onClick={() => onMarkRead(notification.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMarkRead(notification.id);
+              }}
               title="Mark as read">
               <CheckCircle className="h-4 w-4" />
             </Button>
@@ -165,7 +220,10 @@ export function NotificationItem({
             variant="ghost"
             size="icon"
             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-            onClick={() => setShowDeleteDialog(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteDialog(true);
+            }}
             title="Delete notification"
             disabled={isDeleting}>
             <Trash2 className="h-4 w-4" />
