@@ -20,13 +20,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "react-router-dom";
 
 export function Topbar() {
   const { user, logout } = useAuth();
+  const { unreadCount } = useNotifications();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  const displayBadgeCount = unreadCount >= 10 ? "9+" : unreadCount;
 
   return (
     <>
@@ -45,7 +49,11 @@ export function Topbar() {
           <Button variant="ghost" size="icon" className="relative" asChild>
             <Link to="/notifications">
               <Bell className="h-5 w-5" />
-              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                  {displayBadgeCount}
+                </span>
+              )}
               <span className="sr-only">Notifications</span>
             </Link>
           </Button>
