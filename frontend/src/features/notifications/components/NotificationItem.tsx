@@ -10,9 +10,12 @@ import {
   Info,
   ShoppingBag,
   Trash2,
+  Users,
+  User,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,6 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface NotificationItemProps {
   notification: Notification;
@@ -32,6 +36,7 @@ interface NotificationItemProps {
   onDelete: (id: number) => void;
   isDeleting?: boolean;
   isNew?: boolean;
+  currentUserId?: number;
 }
 
 const getNotificationIcon = (type?: string): LucideIcon => {
@@ -54,15 +59,48 @@ const getNotificationIcon = (type?: string): LucideIcon => {
   }
 };
 
+const getNotificationPath = (type?: string): string => {
+  switch (type) {
+    case "chore_assigned":
+      return "/chores";
+    case "expense_added":
+      return "/expenses";
+    case "payment_received":
+      return "/payments";
+    case "household_invite":
+      return "/household";
+    case "need_added":
+    case "need_purchased":
+      return "/needs";
+    case "system":
+      return "/dashboard";
+    default:
+      return "/notifications";
+  }
+};
+
 export function NotificationItem({
   notification,
   onMarkRead,
   onDelete,
   isDeleting,
   isNew = false,
+  currentUserId,
 }: NotificationItemProps) {
   const NotificationIcon = getNotificationIcon(notification.type);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const navigate = useNavigate();
+
+  const isHouseholdWide = notification.userId === null;
+  const isForCurrentUser = notification.userId === currentUserId;
+  const notificationPath = getNotificationPath(notification.type);
+
+  const handleClick = () => {
+    navigate(notificationPath);
+    if (!notification.isRead) {
+      onMarkRead(notification.id);
+    }
+  };
 
   return (
     <>
@@ -72,8 +110,9 @@ export function NotificationItem({
         exit={{ scale: 0.95, opacity: 0, x: 20 }}
         whileHover={{ scale: 1.02, y: -2 }}
         transition={{ duration: 0.2 }}
+        onClick={handleClick}
         className={cn(
-          "group flex items-start gap-4 rounded-lg border p-4 transition-colors",
+          "group flex items-start gap-4 rounded-lg border p-4 transition-colors cursor-pointer",
           notification.isRead ? "bg-background" : "bg-muted/50 border-primary/20"
         )}>
         <div
@@ -86,13 +125,27 @@ export function NotificationItem({
           <NotificationIcon className="h-4 w-4" />
         </div>
         <div className="flex-1 space-y-1">
-          <p
-            className={cn(
-              "text-sm font-medium leading-none",
-              !notification.isRead && "font-semibold"
-            )}>
-            {notification.message}
-          </p>
+          <div className="flex items-center gap-2">
+            <p
+              className={cn(
+                "text-sm font-medium leading-none",
+                !notification.isRead && "font-semibold"
+              )}>
+              {notification.message}
+            </p>
+            {isHouseholdWide && (
+              <Badge variant="secondary" className="text-xs">
+                <Users className="h-3 w-3 mr-1" />
+                Everyone
+              </Badge>
+            )}
+            {!isHouseholdWide && isForCurrentUser && (
+              <Badge variant="outline" className="text-xs">
+                <User className="h-3 w-3 mr-1" />
+                For you
+              </Badge>
+            )}
+          </div>
           <p className="text-xs text-muted-foreground">
             {new Date(notification.createdAt).toLocaleString()}
           </p>

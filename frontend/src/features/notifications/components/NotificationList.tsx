@@ -5,10 +5,12 @@ import { CheckCheck, Bell } from "lucide-react";
 import { NotificationListSkeleton } from "@/components/ui/skeletons";
 import { StaggerContainer, StaggerItem, FadeIn } from "@/components/ui/motion";
 import { AnimatePresence } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 
 export function NotificationList() {
   const { notifications, isLoading, markRead, markAllRead, delete: deleteNotification, isMarkingRead, isDeleting } =
     useNotifications();
+  const { user } = useAuth();
 
   if (isLoading) {
     return <NotificationListSkeleton />;
@@ -49,6 +51,7 @@ export function NotificationList() {
                 onMarkRead={markRead}
                 onDelete={deleteNotification}
                 isDeleting={isDeleting}
+                currentUserId={user?.id}
               />
             </StaggerItem>
           ))}
