@@ -40,13 +40,6 @@ export function Topbar() {
         </div>
 
         <div className="flex items-center gap-4 ml-auto">
-          {/* Realtime Indicator */}
-          <div
-            className="flex items-center gap-2"
-            title="Connected to household in realtime">
-            <div className="h-2 w-2 rounded-full bg-green-500" />
-          </div>
-
           <ThemeToggle />
 
           <Button variant="ghost" size="icon" className="relative" asChild>

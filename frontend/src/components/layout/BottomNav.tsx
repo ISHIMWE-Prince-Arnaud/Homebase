@@ -35,15 +35,11 @@ export function BottomNav() {
                   "flex flex-col items-center justify-center space-y-1 text-xs font-medium transition-colors hover:text-primary relative micro-bounce",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}>
-                <span className={cn(
-                  "absolute inset-0 rounded-lg bg-primary/10 scale-90 opacity-0 transition-all duration-150",
-                  isActive && "scale-100 opacity-100"
-                )} />
                 <tab.icon 
-                  className={cn("h-5 w-5 relative z-10", isActive && "fill-current")} 
+                  className={cn("h-5 w-5", isActive && "fill-current")} 
                   fill={isActive ? "currentColor" : "none"}
                 />
-                <span className="relative z-10">{tab.name}</span>
+                <span>{tab.name}</span>
               </Link>
             );
           })}
