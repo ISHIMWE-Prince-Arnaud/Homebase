@@ -31,6 +31,7 @@ export function BottomNav() {
         <div className="flex h-16 items-center justify-around px-2">
           {bottomNavPrimary.map((tab) => {
             const isActive = location.pathname === tab.href;
+            const Icon = isActive ? tab.filledIcon : tab.icon;
             return (
               <Link
                 key={tab.href}
@@ -39,10 +40,7 @@ export function BottomNav() {
                   "flex flex-col items-center justify-center space-y-1 text-xs font-medium transition-colors hover:text-primary relative micro-bounce",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}>
-                <tab.icon 
-                  className={cn("h-5 w-5", isActive && "fill-current")} 
-                  fill={isActive ? "currentColor" : "none"}
-                />
+                <Icon className="h-5 w-5" />
                 <span>{tab.name}</span>
               </Link>
             );

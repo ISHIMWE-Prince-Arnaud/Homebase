@@ -24,6 +24,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   const NavItem = ({ item }: { item: typeof primaryNav[number] }) => {
     const isActive = location.pathname === item.href;
+    const Icon = isActive ? item.filledIcon : item.icon;
     return (
       <div className="relative">
         {isActive && (
@@ -37,10 +38,7 @@ export function Sidebar({ className }: SidebarProps) {
           )}
           asChild>
           <Link to={item.href}>
-            <item.icon 
-              className={cn("h-4 w-4 mr-2", isActive && "fill-current")} 
-              fill={isActive ? "currentColor" : "none"}
-            />
+            <Icon className="h-4 w-4 mr-2" />
             {item.name}
           </Link>
         </Button>

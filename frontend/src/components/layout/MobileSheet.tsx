@@ -45,6 +45,7 @@ export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetPr
             </h3>
             {menuItems.map((item, index) => {
               const isActive = location.pathname === item.href;
+              const Icon = isActive ? item.filledIcon : item.icon;
               return (
                 <div key={item.href} className="relative">
                   {isActive && (
@@ -62,10 +63,7 @@ export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetPr
                       animationDelay: `${index * 50}ms`,
                     }}>
                     <Link to={item.href}>
-                      <item.icon 
-                        className={cn("mr-2 h-4 w-4", isActive && "fill-current")} 
-                        fill={isActive ? "currentColor" : "none"}
-                      />
+                      <Icon className="mr-2 h-4 w-4" />
                       {item.name}
                     </Link>
                   </Button>
@@ -81,6 +79,7 @@ export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetPr
             </h3>
             {settingsItems.map((item, index) => {
               const isActive = location.pathname === item.href;
+              const Icon = isActive ? item.filledIcon : item.icon;
               return (
                 <div key={item.href} className="relative">
                   {isActive && (
@@ -98,10 +97,7 @@ export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetPr
                       animationDelay: `${(menuItems.length + index) * 50}ms`,
                     }}>
                     <Link to={item.href}>
-                      <item.icon 
-                        className={cn("mr-2 h-4 w-4", isActive && "fill-current")} 
-                        fill={isActive ? "currentColor" : "none"}
-                      />
+                      <Icon className="mr-2 h-4 w-4" />
                       {item.name}
                     </Link>
                   </Button>

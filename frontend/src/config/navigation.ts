@@ -14,6 +14,7 @@ export interface NavItem {
   name: string;
   href: string;
   icon: LucideIcon;
+  filledIcon: LucideIcon;
   priority: number;
   section: "menu" | "settings";
 }
@@ -23,6 +24,7 @@ export const primaryNav: NavItem[] = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+    filledIcon: LayoutDashboard,
     priority: 1,
     section: "menu",
   },
@@ -30,6 +32,7 @@ export const primaryNav: NavItem[] = [
     name: "Chores",
     href: "/chores",
     icon: CheckSquare,
+    filledIcon: CheckSquare,
     priority: 2,
     section: "menu",
   },
@@ -37,6 +40,7 @@ export const primaryNav: NavItem[] = [
     name: "Needs",
     href: "/needs",
     icon: ShoppingBag,
+    filledIcon: ShoppingBag,
     priority: 3,
     section: "menu",
   },
@@ -44,6 +48,7 @@ export const primaryNav: NavItem[] = [
     name: "Expenses",
     href: "/expenses",
     icon: Receipt,
+    filledIcon: Receipt,
     priority: 4,
     section: "menu",
   },
@@ -51,6 +56,7 @@ export const primaryNav: NavItem[] = [
     name: "Payments",
     href: "/payments",
     icon: CreditCard,
+    filledIcon: CreditCard,
     priority: 5,
     section: "menu",
   },
@@ -61,6 +67,7 @@ export const secondaryNav: NavItem[] = [
     name: "Notifications",
     href: "/notifications",
     icon: Bell,
+    filledIcon: Bell,
     priority: 1,
     section: "settings",
   },
@@ -68,6 +75,7 @@ export const secondaryNav: NavItem[] = [
     name: "Household",
     href: "/household",
     icon: Home,
+    filledIcon: Home,
     priority: 2,
     section: "settings",
   },
@@ -75,6 +83,7 @@ export const secondaryNav: NavItem[] = [
     name: "Profile",
     href: "/profile",
     icon: User,
+    filledIcon: User,
     priority: 3,
     section: "settings",
   },
