@@ -49,6 +49,11 @@ vi.mock("@/hooks/useExpenses", () => ({
       { userId: 2, name: "Bob", net: -25 },
     ],
     settlements: [],
+    mySettlements: [
+      { fromUserId: 2, toUserId: 1, amount: 15 },
+    ],
+    settlementsScale: 1,
+    mySettlementsScale: 1,
     isLoading: false,
     createExpense: vi.fn(),
   }),
