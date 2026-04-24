@@ -5,7 +5,7 @@ import {
   Receipt,
   CreditCard,
   Bell,
-  Home,
+  Users,
   User,
   type LucideIcon,
 } from "lucide-react";
@@ -74,8 +74,8 @@ export const secondaryNav: NavItem[] = [
   {
     name: "Household",
     href: "/household",
-    icon: Home,
-    filledIcon: Home,
+    icon: Users,
+    filledIcon: Users,
     priority: 2,
     section: "settings",
   },
