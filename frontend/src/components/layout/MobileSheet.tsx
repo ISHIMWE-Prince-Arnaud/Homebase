@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,9 +7,8 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
-import { bottomNavMenu } from "@/config/navigation";
+import { primaryNav, secondaryNav } from "@/config/navigation";
 
 interface MobileSheetProps {
   open: boolean;
@@ -20,20 +19,11 @@ interface MobileSheetProps {
 export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetProps) {
   const location = useLocation();
 
-  const menuItems = bottomNavMenu.filter(item => item.section === "menu");
-  const settingsItems = bottomNavMenu.filter(item => item.section === "settings");
+  const menuItems = primaryNav;
+  const settingsItems = secondaryNav;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetTrigger asChild>
-        <button
-          className={cn(
-            "flex flex-col items-center justify-center space-y-1 text-xs font-medium transition-colors hover:text-primary text-muted-foreground active:scale-95 transition-transform duration-100"
-          )}>
-          <Menu className="h-5 w-5" />
-          <span>Menu</span>
-        </button>
-      </SheetTrigger>
       <SheetContent side="right" className="w-[280px]">
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>

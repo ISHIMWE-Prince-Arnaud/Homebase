@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Menu } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +21,9 @@ export function BottomNav() {
   const { logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  // Check if current route is in bottom nav primary tabs
+  const isMenuActive = ![...bottomNavPrimary].some(item => location.pathname === item.href);
 
   return (
     <>
@@ -43,6 +47,16 @@ export function BottomNav() {
               </Link>
             );
           })}
+
+          <button
+            onClick={() => setOpen(true)}
+            className={cn(
+              "flex flex-col items-center justify-center space-y-1 text-xs font-medium transition-colors hover:text-primary active:scale-95 transition-transform duration-100",
+              isMenuActive ? "text-primary" : "text-muted-foreground"
+            )}>
+            <Menu className="h-5 w-5" />
+            <span>Menu</span>
+          </button>
 
           <MobileSheet 
             open={open} 
