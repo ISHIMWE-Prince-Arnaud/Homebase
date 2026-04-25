@@ -15,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { primaryNav, secondaryNav } from "@/config/navigation";
+import { Separator } from "@/components/ui/separator";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -77,6 +78,7 @@ export function Sidebar({ className }: SidebarProps) {
             {secondaryNav.map((item) => (
               <NavItem key={item.href} item={item} />
             ))}
+            <Separator className="my-4" />
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button

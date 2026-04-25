@@ -59,23 +59,23 @@ export const primaryNav: NavItem[] = [
     priority: 5,
     section: "menu",
   },
-];
-
-export const secondaryNav: NavItem[] = [
   {
     name: "Notifications",
     href: "/notifications",
     icon: Bell,
     filledIcon: Bell,
-    priority: 1,
-    section: "settings",
+    priority: 6,
+    section: "menu",
   },
+];
+
+export const secondaryNav: NavItem[] = [
   {
     name: "Household",
     href: "/household",
     icon: Users,
     filledIcon: Users,
-    priority: 2,
+    priority: 1,
     section: "settings",
   },
 ];
