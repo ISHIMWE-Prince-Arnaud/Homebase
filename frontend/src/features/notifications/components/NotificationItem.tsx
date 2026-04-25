@@ -12,6 +12,7 @@ import {
   Trash2,
   Users,
   User,
+  ExternalLink,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ import {
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { formatRelativeTime, formatFullDate } from "@/lib/display";
 
 interface NotificationItemProps {
   notification: Notification;
@@ -109,6 +111,25 @@ const getActionLabel = (type?: string): string | null => {
   }
 };
 
+const getNotificationIconStyle = (type?: string): string => {
+  switch (type) {
+    case "chore_assigned":
+      return "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400";
+    case "expense_added":
+    case "payment_received":
+      return "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400";
+    case "need_added":
+    case "need_purchased":
+      return "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
+    case "household_invite":
+      return "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400";
+    case "system":
+      return "bg-slate-100 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400";
+    default:
+      return "bg-primary/10 text-primary";
+  }
+};
+
 export function NotificationItem({
   notification,
   onMarkRead,
@@ -169,63 +190,73 @@ export function NotificationItem({
         transition={{ duration: 0.2 }}
         onClick={handleClick}
         className={cn(
-          "group flex items-start gap-4 rounded-lg border p-4 transition-colors cursor-pointer select-none touch-pan-x",
-          notification.isRead ? "bg-background" : "bg-muted/50 border-primary/20"
+          "group flex items-start gap-3 rounded-lg border transition-all cursor-pointer select-none touch-pan-x",
+          notification.isRead
+            ? "bg-background/50 border-border/30 opacity-80 p-2 sm:p-3"
+            : "bg-card border-l-4 border-l-primary border-y-border border-r-border shadow-sm p-3 sm:p-4"
         )}>
         <div
           className={cn(
-            "mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+            "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
             notification.isRead
               ? "bg-muted text-muted-foreground"
-              : "bg-primary/10 text-primary"
+              : getNotificationIconStyle(notification.type)
           )}>
           <NotificationIcon className="h-4 w-4" />
         </div>
-        <div className="flex-1 space-y-1">
-          <div className="flex items-center gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
             <p
               className={cn(
-                "text-sm font-medium leading-none",
+                "text-sm font-medium leading-tight",
                 !notification.isRead && "font-semibold"
               )}>
               {notification.actor?.name ? `${notification.actor.name} ${notification.message}` : notification.message}
             </p>
-            {isHouseholdWide && (
-              <Badge variant="secondary" className="text-xs">
-                <Users className="h-3 w-3 mr-1" />
-                Everyone
-              </Badge>
-            )}
-            {!isHouseholdWide && isForCurrentUser && (
-              <Badge variant="outline" className="text-xs">
-                <User className="h-3 w-3 mr-1" />
-                For you
-              </Badge>
-            )}
+            <div className="flex items-center gap-1 mt-0.5 sm:mt-0">
+              {isHouseholdWide && (
+                <Badge variant="secondary" className="text-[10px] sm:text-xs h-5 px-1.5">
+                  <Users className="h-3 w-3 mr-0.5" />
+                  <span className="hidden sm:inline">Everyone</span>
+                  <span className="sm:hidden">All</span>
+                </Badge>
+              )}
+              {!isHouseholdWide && isForCurrentUser && (
+                <Badge variant="outline" className="text-[10px] sm:text-xs h-5 px-1.5">
+                  <User className="h-3 w-3 mr-0.5" />
+                  <span className="hidden sm:inline">For you</span>
+                  <span className="sm:hidden">You</span>
+                </Badge>
+              )}
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {new Date(notification.createdAt).toLocaleString()}
+          <p className="text-xs text-muted-foreground mt-1" title={formatFullDate(notification.createdAt)}>
+            {formatRelativeTime(notification.createdAt)}
           </p>
         </div>
-        <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="flex items-center gap-0.5 sm:gap-1">
           {actionLabel && (
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className="h-8 text-xs"
-              onClick={handleAction}>
-              {actionLabel}
+              className="h-9 w-9 sm:w-auto sm:px-2 p-0 text-muted-foreground hover:text-foreground"
+              onClick={handleAction}
+              aria-label={actionLabel}
+              title={actionLabel}>
+              <ExternalLink className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline text-xs">{actionLabel}</span>
             </Button>
           )}
           {!notification.isRead && (
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0 text-muted-foreground hover:text-primary"
+              className="h-9 w-9 shrink-0 text-muted-foreground hover:text-primary"
               onClick={(e) => {
                 e.stopPropagation();
                 onMarkRead(notification.id);
               }}
+              aria-label="Mark as read"
               title="Mark as read">
               <CheckCircle className="h-4 w-4" />
             </Button>
@@ -233,11 +264,12 @@ export function NotificationItem({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+            className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive"
             onClick={(e) => {
               e.stopPropagation();
               setShowDeleteDialog(true);
             }}
+            aria-label="Delete notification"
             title="Delete notification"
             disabled={isDeleting}>
             <Trash2 className="h-4 w-4" />
