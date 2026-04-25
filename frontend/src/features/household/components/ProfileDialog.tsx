@@ -77,7 +77,7 @@ export function ProfileDialog() {
             <span className="hidden sm:inline">Profile</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto scrollbar-hide">
           <DialogHeader>
             <DialogTitle>My Profile</DialogTitle>
           </DialogHeader>
