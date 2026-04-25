@@ -74,6 +74,17 @@ export const useHousehold = () => {
     },
   });
 
+  const updateHouseholdMutation = useMutation({
+    mutationFn: householdApi.update,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["household", "me"], data);
+      showToast.success("Household updated", `Changes saved successfully.`);
+    },
+    onError: () => {
+      showToast.error("Failed to update", "Please try again.");
+    },
+  });
+
   return {
     household,
     isLoading,
@@ -84,5 +95,7 @@ export const useHousehold = () => {
     isJoining: joinHouseholdMutation.isPending,
     leaveHousehold: leaveHouseholdMutation.mutate,
     isLeaving: leaveHouseholdMutation.isPending,
+    updateHousehold: updateHouseholdMutation.mutate,
+    isUpdating: updateHouseholdMutation.isPending,
   };
 };

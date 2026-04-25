@@ -15,6 +15,7 @@ export interface Household {
   currency: string;
   members: HouseholdMember[];
   ownerId: number;
+  createdById: number;
   inviteCode: string;
   createdAt: string;
   updatedAt: string;
@@ -51,6 +52,7 @@ const toHousehold = (raw: BackendHousehold): Household => {
       u.name || u.displayName || (u.email ? u.email.split("@")[0] : "Member"),
     profileImage: u.profileImage || u.avatarUrl || u.imageUrl || u.image,
   }));
+  const ownerId = raw.ownerId ?? members[0]?.id ?? 0;
   return {
     id: raw.id,
     name: raw.name,
@@ -58,8 +60,8 @@ const toHousehold = (raw: BackendHousehold): Household => {
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
     members,
-    // Fallbacks if backend doesn't provide these yet
-    ownerId: raw.ownerId ?? members[0]?.id ?? 0,
+    ownerId,
+    createdById: raw.ownerId ?? members[0]?.id ?? 0,
     currency: raw.currency ?? "USD",
   };
 };
@@ -86,5 +88,9 @@ export const householdApi = {
   },
   leave: async () => {
     await api.post("/households/leave");
+  },
+  update: async (data: Partial<CreateHouseholdInput>) => {
+    const response = await api.patch<BackendHousehold>("/households/me", data);
+    return toHousehold(response.data);
   },
 };
