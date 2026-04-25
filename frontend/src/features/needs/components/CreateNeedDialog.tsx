@@ -49,8 +49,8 @@ export function CreateNeedDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Item
+          <Plus className="sm:mr-2 h-4 w-4" />
+          <span className="hidden sm:inline">Add Item</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -81,8 +81,8 @@ export function CreateChoreDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Chore
+          <Plus className="sm:mr-2 h-4 w-4" />
+          <span className="hidden sm:inline">Add Chore</span>
         </Button>
       </DialogTrigger>
 

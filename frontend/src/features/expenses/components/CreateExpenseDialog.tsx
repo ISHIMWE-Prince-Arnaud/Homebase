@@ -97,8 +97,8 @@ export function CreateExpenseDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Expense
+          <Plus className="sm:mr-2 h-4 w-4" />
+          <span className="hidden sm:inline">Add Expense</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
