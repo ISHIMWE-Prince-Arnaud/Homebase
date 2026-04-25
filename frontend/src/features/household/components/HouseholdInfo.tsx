@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/motion";
+import { ProfileDialog } from "./ProfileDialog";
 
 export function HouseholdInfo() {
   const { household, leaveHousehold, isLeaving, updateHousehold, isUpdating } = useHousehold();
@@ -92,13 +93,15 @@ export function HouseholdInfo() {
                 {household.members.length} members · Created {new Date(household.createdAt).toLocaleDateString()}
               </CardDescription>
             </div>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 w-9 sm:w-auto sm:px-3 p-0 text-muted-foreground hover:text-destructive hover:border-destructive shrink-0">
-                  <LogOut className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Leave</span>
-                </Button>
-              </AlertDialogTrigger>
+            <div className="flex items-center gap-2">
+              <ProfileDialog />
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-9 w-9 sm:w-auto sm:px-3 p-0 text-muted-foreground hover:text-destructive hover:border-destructive shrink-0">
+                    <LogOut className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Leave</span>
+                  </Button>
+                </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Leave Household?</AlertDialogTitle>
@@ -117,6 +120,7 @@ export function HouseholdInfo() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">

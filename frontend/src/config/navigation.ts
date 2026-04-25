@@ -6,7 +6,6 @@ import {
   CreditCard,
   Bell,
   Users,
-  User,
   type LucideIcon,
 } from "lucide-react";
 
@@ -77,14 +76,6 @@ export const secondaryNav: NavItem[] = [
     icon: Users,
     filledIcon: Users,
     priority: 2,
-    section: "settings",
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-    icon: User,
-    filledIcon: User,
-    priority: 3,
     section: "settings",
   },
 ];

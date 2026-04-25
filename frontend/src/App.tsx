@@ -11,7 +11,6 @@ import ExpensesPage from "@/pages/Expenses";
 import PaymentsPage from "@/pages/Payments";
 import HouseholdPage from "@/pages/Household";
 import NotificationsPage from "@/pages/Notifications";
-import ProfilePage from "@/pages/Profile";
 import DashboardPage from "@/pages/Dashboard";
 
 function App() {
@@ -38,7 +37,6 @@ function App() {
 
           {/* Always accessible when authenticated */}
           <Route path="/household" element={<HouseholdPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>
 
