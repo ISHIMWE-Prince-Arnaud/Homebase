@@ -112,7 +112,7 @@ export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetPr
           {/* Logout */}
           <Button
             variant="ghost"
-            className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 focus:text-destructive focus:bg-destructive/10"
             onClick={onLogoutClick}>
             <LogOut className="mr-2 h-4 w-4" />
             Log Out

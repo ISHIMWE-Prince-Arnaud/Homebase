@@ -10,6 +10,7 @@ export interface User {
   email: string;
   name: string;
   profileImage?: string;
+  createdAt?: string;
 }
 
 export interface AuthResponse {
@@ -25,6 +26,7 @@ export interface BackendUser {
   avatarUrl?: string;
   imageUrl?: string;
   image?: string;
+  createdAt?: string;
 }
 
 export const toUser = (raw: BackendUser): User => ({
@@ -35,6 +37,7 @@ export const toUser = (raw: BackendUser): User => ({
     raw.displayName ||
     (raw.email ? raw.email.split("@")[0] : "User"),
   profileImage: raw.profileImage || raw.avatarUrl || raw.imageUrl || raw.image,
+  createdAt: raw.createdAt,
 });
 
 export const authApi = {

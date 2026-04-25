@@ -88,7 +88,7 @@ export function Sidebar({ className }: SidebarProps) {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Logout?</AlertDialogTitle>
+                  <AlertDialogTitle>Log Out?</AlertDialogTitle>
                   <AlertDialogDescription>
                     Are you sure you want to log out? You'll need to sign in
                     again to access your account.
@@ -97,9 +97,9 @@ export function Sidebar({ className }: SidebarProps) {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
-                    className="bg-destructive text-white hover:bg-destructive/50"
+                    className="bg-destructive text-white hover:bg-destructive/90"
                     onClick={() => logout()}>
-                    Logout
+                    Log Out
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

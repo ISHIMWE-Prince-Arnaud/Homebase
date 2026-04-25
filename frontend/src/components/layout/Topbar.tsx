@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import { Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -77,8 +77,11 @@ export function Topbar() {
                 <span className="font-medium">{user?.name}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setShowLogoutDialog(true)}>
-                Logout
+              <DropdownMenuItem 
+                onClick={() => setShowLogoutDialog(true)}
+                className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                Log Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -97,9 +100,9 @@ export function Topbar() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive text-white hover:bg-destructive/50"
+              className="bg-destructive text-white hover:bg-destructive/90"
               onClick={() => logout()}>
-              Logout
+              Log Out
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
