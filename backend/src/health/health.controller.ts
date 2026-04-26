@@ -1,9 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import {
-  HealthCheck,
-  HealthCheckService,
-  TypeOrmHealthIndicator,
-} from '@nestjs/terminus';
+import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 import { PrismaHealthIndicator } from './indicators/prisma.health';
 import { WebsocketHealthIndicator } from './indicators/websocket.health';
 import { MemoryHealthIndicator } from './indicators/memory.health';

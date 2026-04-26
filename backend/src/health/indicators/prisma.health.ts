@@ -25,6 +25,7 @@ export class PrismaHealthIndicator extends HealthIndicator {
       throw new HealthCheckError(
         'Prisma check failed',
         this.getStatus(key, false, {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           message: error.message,
         }),
       );
