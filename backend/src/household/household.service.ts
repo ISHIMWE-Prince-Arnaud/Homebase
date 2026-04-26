@@ -76,7 +76,7 @@ export class HouseholdService {
       },
       include: {
         users: {
-          select: { id: true, email: true, name: true, profileImage: true },
+          select: { id: true, email: true, name: true },
         },
       },
     });
@@ -109,7 +109,7 @@ export class HouseholdService {
         where: { inviteCode: dto.inviteCode },
         include: {
           users: {
-            select: { id: true, email: true, name: true, profileImage: true },
+            select: { id: true, email: true, name: true },
           },
         },
       });
@@ -142,7 +142,7 @@ export class HouseholdService {
         where: { id: household.id },
         include: {
           users: {
-            select: { id: true, email: true, name: true, profileImage: true },
+            select: { id: true, email: true, name: true },
           },
         },
       });
@@ -197,7 +197,6 @@ export class HouseholdService {
             id: true,
             email: true,
             name: true,
-            profileImage: true,
           },
         },
       },

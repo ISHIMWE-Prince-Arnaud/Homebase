@@ -5,7 +5,6 @@ export interface ExpenseParticipantUser {
   id: number;
   name: string;
   email: string;
-  profileImage?: string;
 }
 
 export interface ExpenseParticipant {
@@ -22,7 +21,6 @@ export interface ExpensePaidByUser {
   id: number;
   name: string;
   email: string;
-  profileImage?: string;
 }
 
 export interface Expense {

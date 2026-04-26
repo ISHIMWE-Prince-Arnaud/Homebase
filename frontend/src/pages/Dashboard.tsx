@@ -6,7 +6,7 @@ import { useHousehold } from "@/hooks/useHousehold";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CheckSquare,
   ShoppingBag,
@@ -304,13 +304,9 @@ export default function DashboardPage() {
                     key={member.id}
                     className="flex items-center justify-between group">
                     <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10 border-2 border-background ring-1 ring-muted transition-transform group-hover:scale-105">
-                        <AvatarImage
-                          src={member.profileImage}
-                          alt={member.name}
-                        />
+                      <Avatar className="h-10 w-10 border-2 border-background ring-1 ring-muted transition-transform group-hover:scale-105 bg-primary/10">
                         <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                          {member.name[0]}
+                          {member.name[0]?.toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>

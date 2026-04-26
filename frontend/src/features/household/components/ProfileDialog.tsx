@@ -15,8 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, Camera, User } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LogOut, User } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
@@ -85,25 +85,16 @@ export function ProfileDialog() {
           <div className="space-y-6 py-4">
             {/* Personal Info Section */}
             <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-6">
-              <div className="relative">
-                <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-muted">
-                  <AvatarImage src={user.profileImage} />
-                  <AvatarFallback className="text-xl sm:text-2xl bg-primary/10 text-primary font-semibold">
-                    {user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <button
-                  className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors"
-                  title="Change profile picture (coming soon)"
-                  disabled>
-                  <Camera className="h-4 w-4" />
-                </button>
-              </div>
+              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-muted bg-primary/10">
+                <AvatarFallback className="text-xl sm:text-2xl bg-primary/10 text-primary font-semibold">
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 2)}
+                </AvatarFallback>
+              </Avatar>
               <div className="text-center sm:text-left space-y-1">
                 <h3 className="font-semibold text-lg">{user.name}</h3>
                 <p className="text-sm text-muted-foreground">{user.email}</p>

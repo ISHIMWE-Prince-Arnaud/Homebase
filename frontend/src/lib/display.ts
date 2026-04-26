@@ -15,12 +15,6 @@ export const getDisplayName = (
   return member?.name || "Former Member";
 };
 
-export const getAvatarUrl = (
-  member: Pick<HouseholdMember, "profileImage"> | undefined
-): string | undefined => {
-  return member?.profileImage;
-};
-
 export function formatRelativeTime(date: string | Date): string {
   const d = new Date(date);
 

@@ -7,7 +7,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Copy, LogOut, Users, Crown, Pencil, Check, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -155,11 +155,7 @@ export function HouseholdInfo() {
               {household.members.map((member) => (
                 <StaggerItem key={member.id}>
                   <div className="group flex items-center gap-2 sm:gap-3 rounded-lg border p-2 sm:p-3 hover:bg-muted/20 transition-colors">
-                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border shrink-0">
-                      <AvatarImage
-                        src={member.profileImage}
-                        alt={member.name}
-                      />
+                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border shrink-0 bg-primary/10">
                       <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm font-medium">
                         {member.name
                           .split(" ")

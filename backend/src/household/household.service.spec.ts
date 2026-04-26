@@ -35,7 +35,7 @@ describe('HouseholdService', () => {
       id: 10,
       name: 'Test Home',
       inviteCode: 'ABC12345',
-      users: [{ id: 1, email: 'a@b.com', name: 'Alice', profileImage: 'img.png' }],
+      users: [{ id: 1, email: 'a@b.com', name: 'Alice' }],
     };
 
     it('should create household, connects creator, returns with users', async () => {
@@ -92,7 +92,7 @@ describe('HouseholdService', () => {
       id: 10,
       name: 'Test Home',
       inviteCode: 'ABC12345',
-      users: [{ id: 1, email: 'a@b.com', name: 'Alice', profileImage: 'img.png' }],
+      users: [{ id: 1, email: 'a@b.com', name: 'Alice' }],
     };
 
     it('should join household by valid invite code', async () => {

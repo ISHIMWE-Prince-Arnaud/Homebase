@@ -16,7 +16,6 @@ const mockUser: BackendUser = {
   id: 1,
   email: "test@example.com",
   name: "Test User",
-  profileImage: "https://img.test/avatar.png",
 };
 
 beforeEach(() => {
@@ -37,26 +36,6 @@ describe("toUser", () => {
   it("falls back to email username", () => {
     const result = toUser({ id: 1, email: "alice@example.com" });
     expect(result.name).toBe("alice");
-  });
-
-  it("normalizes profileImage from profileImage field", () => {
-    const result = toUser({ id: 1, email: "a@b.com", profileImage: "img.png" });
-    expect(result.profileImage).toBe("img.png");
-  });
-
-  it("falls back to avatarUrl", () => {
-    const result = toUser({ id: 1, email: "a@b.com", avatarUrl: "avatar.png" });
-    expect(result.profileImage).toBe("avatar.png");
-  });
-
-  it("falls back to imageUrl", () => {
-    const result = toUser({ id: 1, email: "a@b.com", imageUrl: "image.png" });
-    expect(result.profileImage).toBe("image.png");
-  });
-
-  it("falls back to image", () => {
-    const result = toUser({ id: 1, email: "a@b.com", image: "pic.png" });
-    expect(result.profileImage).toBe("pic.png");
   });
 });
 

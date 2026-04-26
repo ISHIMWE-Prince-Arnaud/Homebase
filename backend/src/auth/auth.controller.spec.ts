@@ -12,7 +12,6 @@ describe('AuthController', () => {
     id: 1,
     email: 'test@test.com',
     name: 'Test User',
-    profileImage: 'img.png',
   };
 
   beforeEach(async () => {

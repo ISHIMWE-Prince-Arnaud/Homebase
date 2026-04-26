@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useState } from "react";
@@ -60,10 +60,9 @@ export function Topbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user?.profileImage} alt={user?.name} />
-                  <AvatarFallback>
-                    {user?.name?.charAt(0) || "U"}
+                <Avatar className="h-8 w-8 bg-primary/10">
+                  <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
+                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
                 <span className="sr-only">Toggle user menu</span>

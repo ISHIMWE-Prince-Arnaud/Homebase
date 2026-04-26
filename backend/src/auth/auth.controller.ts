@@ -59,7 +59,6 @@ export class AuthController {
     id: number;
     email: string;
     name: string;
-    profileImage: string;
   }> {
     return this.authService.getProfile(req.user.id);
   }
@@ -73,7 +72,6 @@ export class AuthController {
     id: number;
     email: string;
     name: string;
-    profileImage: string;
   }> {
     return this.authService.updateProfile(userId, dto);
   }

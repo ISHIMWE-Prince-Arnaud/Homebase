@@ -29,16 +29,11 @@ export class AuthService {
 
     const hash = await bcrypt.hash(registerDto.password, 10);
 
-    const avatarIndex = Math.max(
-      1,
-      Math.min(100, Math.floor(Math.random() * 100) + 1),
-    );
     const newUser: User = await this.prisma.user.create({
       data: {
         email: registerDto.email,
         name: registerDto.name,
         password: hash,
-        profileImage: `https://avatar.iran.liara.run/public/${avatarIndex}`,
       },
     });
 
@@ -74,7 +69,6 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
-        profileImage: user.profileImage,
       },
     };
   }
@@ -83,11 +77,10 @@ export class AuthService {
     id: number;
     email: string;
     name: string;
-    profileImage: string;
   }> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, name: true, profileImage: true },
+      select: { id: true, email: true, name: true },
     });
 
     if (!user) {
@@ -104,7 +97,6 @@ export class AuthService {
     id: number;
     email: string;
     name: string;
-    profileImage: string;
   }> {
     const updates: { name?: string; password?: string } = {};
 
@@ -155,7 +147,7 @@ export class AuthService {
     const updated = await this.prisma.user.update({
       where: { id: userId },
       data: updates,
-      select: { id: true, email: true, name: true, profileImage: true },
+      select: { id: true, email: true, name: true },
     });
 
     return updated;

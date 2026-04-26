@@ -6,7 +6,6 @@ export interface HouseholdMember {
   id: number;
   name: string;
   email: string;
-  profileImage?: string;
 }
 
 export interface Household {
@@ -27,10 +26,6 @@ interface BackendUser {
   email: string;
   name?: string;
   displayName?: string;
-  profileImage?: string;
-  avatarUrl?: string;
-  imageUrl?: string;
-  image?: string;
 }
 
 interface BackendHousehold {
@@ -50,7 +45,6 @@ const toHousehold = (raw: BackendHousehold): Household => {
     email: u.email,
     name:
       u.name || u.displayName || (u.email ? u.email.split("@")[0] : "Member"),
-    profileImage: u.profileImage || u.avatarUrl || u.imageUrl || u.image,
   }));
   const ownerId = raw.ownerId ?? members[0]?.id ?? 0;
   return {

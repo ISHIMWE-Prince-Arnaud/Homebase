@@ -120,12 +120,12 @@ export class ExpenseService {
         participants: {
           include: {
             user: {
-              select: { id: true, name: true, email: true, profileImage: true },
+              select: { id: true, name: true, email: true },
             },
           },
         },
         paidBy: {
-          select: { id: true, name: true, email: true, profileImage: true },
+          select: { id: true, name: true, email: true },
         },
       },
     });

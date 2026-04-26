@@ -45,7 +45,6 @@ describe('AuthService', () => {
       email: 'john@test.com',
       name: 'John',
       password: hashedPassword,
-      profileImage: 'https://avatar.iran.liara.run/public/42',
       householdId: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -62,7 +61,6 @@ describe('AuthService', () => {
         id: 1,
         email: 'john@test.com',
         name: 'John',
-        profileImage: createdUser.profileImage,
       });
     });
 
@@ -91,8 +89,8 @@ describe('AuthService', () => {
       await service.register(registerDto);
 
       const createCall = prismaMock.user.create.mock.calls[0][0];
-      expect(createCall.data.profileImage).toMatch(
-        /^https:\/\/avatar\.iran\.liara\.run\/public\/\d+$/,
+      expect(createCall.data.password).toMatch(
+        /^\$2b\$10\$/
       );
     });
   });
@@ -107,7 +105,6 @@ describe('AuthService', () => {
       email: 'john@test.com',
       name: 'John',
       password: hashedPassword,
-      profileImage: 'https://avatar.iran.liara.run/public/42',
       householdId: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -145,7 +142,6 @@ describe('AuthService', () => {
         id: 5,
         email: 'a@b.com',
         name: 'Alice',
-        profileImage: 'img.png',
         password: 'hash',
         householdId: null,
         createdAt: new Date(),
@@ -157,7 +153,7 @@ describe('AuthService', () => {
       expect(jwtService.sign).toHaveBeenCalledWith({ sub: 5, email: 'a@b.com' });
       expect(result).toEqual({
         accessToken: 'test-token',
-        user: { id: 5, email: 'a@b.com', name: 'Alice', profileImage: 'img.png' },
+        user: { id: 5, email: 'a@b.com', name: 'Alice' },
       });
     });
   });
@@ -166,7 +162,7 @@ describe('AuthService', () => {
 
   describe('getProfile()', () => {
     it('should return user profile by id', async () => {
-      const profile = { id: 1, email: 'john@test.com', name: 'John', profileImage: 'img.png' };
+      const profile = { id: 1, email: 'john@test.com', name: 'John' };
       prismaMock.user.findUnique.mockResolvedValue(profile);
 
       const result = await service.getProfile(1);
@@ -174,7 +170,7 @@ describe('AuthService', () => {
       expect(result).toEqual(profile);
       expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
         where: { id: 1 },
-        select: { id: true, email: true, name: true, profileImage: true },
+        select: { id: true, email: true, name: true },
       });
     });
 
@@ -192,7 +188,7 @@ describe('AuthService', () => {
     const hashedPassword = '$2b$10$hashedpassword';
 
     it('should update name only', async () => {
-      const updated = { id: 1, email: 'john@test.com', name: 'NewName', profileImage: 'img.png' };
+      const updated = { id: 1, email: 'john@test.com', name: 'NewName' };
       prismaMock.user.update.mockResolvedValue(updated);
 
       const result = await service.updateProfile(userId, { name: 'NewName' });
@@ -215,7 +211,6 @@ describe('AuthService', () => {
         id: 1,
         email: 'john@test.com',
         name: 'John',
-        profileImage: 'img.png',
       });
 
       await service.updateProfile(userId, {
