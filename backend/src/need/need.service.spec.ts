@@ -63,8 +63,13 @@ describe('NeedService', () => {
       expect(result).toEqual(createdNeed);
       expect(notificationMock.create).toHaveBeenCalledWith(
         householdId,
-        expect.stringContaining('Milk'),
-        'addedNeed',
+        'added',
+        'need_added',
+        undefined,
+        1,
+        'need',
+        1,
+        'added',
       );
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         householdId,
@@ -74,9 +79,9 @@ describe('NeedService', () => {
     });
 
     it('should throw BadRequestException if no householdId', async () => {
-      await expect(
-        service.createNeed(0, userId, dto as any),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createNeed(0, userId, dto as any)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -108,11 +113,22 @@ describe('NeedService', () => {
 
   describe('updateNeed()', () => {
     it('should update name/quantity/category partially', async () => {
-      prismaMock.householdNeed.findFirst.mockResolvedValue({ id: 1, householdId: 10 });
-      const updated = { id: 1, name: 'Oat Milk', quantity: '3', category: 'Groceries' };
+      prismaMock.householdNeed.findFirst.mockResolvedValue({
+        id: 1,
+        householdId: 10,
+      });
+      const updated = {
+        id: 1,
+        name: 'Oat Milk',
+        quantity: '3',
+        category: 'Groceries',
+      };
       prismaMock.householdNeed.update.mockResolvedValue(updated);
 
-      const result = await service.updateNeed(1, 10, { name: 'Oat Milk', quantity: '3' });
+      const result = await service.updateNeed(1, 10, {
+        name: 'Oat Milk',
+        quantity: '3',
+      });
 
       expect(result.name).toBe('Oat Milk');
       expect(result.quantity).toBe('3');
@@ -121,11 +137,16 @@ describe('NeedService', () => {
     it('should throw NotFoundException if need not found', async () => {
       prismaMock.householdNeed.findFirst.mockResolvedValue(null);
 
-      await expect(service.updateNeed(999, 10, { name: 'X' })).rejects.toThrow(NotFoundException);
+      await expect(service.updateNeed(999, 10, { name: 'X' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should emit NEED_ITEM_UPDATED', async () => {
-      prismaMock.householdNeed.findFirst.mockResolvedValue({ id: 1, householdId: 10 });
+      prismaMock.householdNeed.findFirst.mockResolvedValue({
+        id: 1,
+        householdId: 10,
+      });
       prismaMock.householdNeed.update.mockResolvedValue({ id: 1, name: 'X' });
 
       await service.updateNeed(1, 10, { name: 'X' });
@@ -146,7 +167,13 @@ describe('NeedService', () => {
     const userId = 1;
 
     it('should mark need as purchased without creating expense', async () => {
-      const updatedNeed = { id: 1, name: 'Milk', isPurchased: true, purchasedAt: expect.any(Date), purchasedById: 1 };
+      const updatedNeed = {
+        id: 1,
+        name: 'Milk',
+        isPurchased: true,
+        purchasedAt: expect.any(Date),
+        purchasedById: 1,
+      };
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -173,14 +200,22 @@ describe('NeedService', () => {
     });
 
     it('should mark need as purchased AND create expense when dto.createExpense=true', async () => {
-      const updatedNeed = { id: 1, name: 'Milk', isPurchased: true, purchasedAt: expect.any(Date), purchasedById: 1 };
+      const updatedNeed = {
+        id: 1,
+        name: 'Milk',
+        isPurchased: true,
+        purchasedAt: expect.any(Date),
+        purchasedById: 1,
+      };
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
           user: {
             ...prismaMock.user,
             findUnique: jest.fn().mockResolvedValue({ id: 1, householdId: 10 }),
-            findMany: jest.fn().mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]),
+            findMany: jest
+              .fn()
+              .mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]),
           },
           householdNeed: {
             ...prismaMock.householdNeed,
@@ -278,11 +313,9 @@ describe('NeedService', () => {
           user: {
             ...prismaMock.user,
             findUnique: jest.fn().mockResolvedValue({ id: 1, householdId: 10 }),
-            findMany: jest.fn().mockResolvedValue([
-              { id: 1 },
-              { id: 2 },
-              { id: 3 },
-            ]),
+            findMany: jest
+              .fn()
+              .mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]),
           },
           householdNeed: {
             ...prismaMock.householdNeed,
@@ -312,14 +345,22 @@ describe('NeedService', () => {
     });
 
     it('should send notifications and emit NEED_ITEM_PURCHASED + NEED_EXPENSE_CREATED', async () => {
-      const updatedNeed = { id: 1, name: 'Milk', isPurchased: true, purchasedAt: new Date(), purchasedById: 1 };
+      const updatedNeed = {
+        id: 1,
+        name: 'Milk',
+        isPurchased: true,
+        purchasedAt: new Date(),
+        purchasedById: 1,
+      };
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
           user: {
             ...prismaMock.user,
             findUnique: jest.fn().mockResolvedValue({ id: 1, householdId: 10 }),
-            findMany: jest.fn().mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]),
+            findMany: jest
+              .fn()
+              .mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]),
           },
           householdNeed: {
             ...prismaMock.householdNeed,
@@ -370,7 +411,9 @@ describe('NeedService', () => {
     it('should throw NotFoundException if need not found', async () => {
       prismaMock.householdNeed.deleteMany.mockResolvedValue({ count: 0 });
 
-      await expect(service.deleteNeed(999, 10)).rejects.toThrow(NotFoundException);
+      await expect(service.deleteNeed(999, 10)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

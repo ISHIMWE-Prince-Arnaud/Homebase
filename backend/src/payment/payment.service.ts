@@ -65,7 +65,7 @@ export class PaymentService {
       // Payer: reduce their "owes" (increase net)
       const payerPrev = netMap.get(p.fromUserId) || 0;
       netMap.set(p.fromUserId, payerPrev + p.amount);
-      
+
       // Receiver: reduce their "paid" (decrease net)
       const receiverPrev = netMap.get(p.toUserId) || 0;
       netMap.set(p.toUserId, receiverPrev - p.amount);

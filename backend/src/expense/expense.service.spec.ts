@@ -77,24 +77,29 @@ describe('ExpenseService', () => {
 
       expect(result.totalAmount).toBe(3000);
       const createCall = prismaMock.expense.create.mock.calls[0][0];
-      const shares = createCall.data.participants.create.map((p: any) => p.shareAmount);
+      const shares = createCall.data.participants.create.map(
+        (p: any) => p.shareAmount,
+      );
       expect(shares).toEqual([1000, 1000, 1000]);
     });
 
     it('should throw BadRequestException if no householdId', async () => {
-      await expect(
-        service.createExpense(0, userId, dto),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createExpense(0, userId, dto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw ForbiddenException if userId !== paidById', async () => {
-      await expect(
-        service.createExpense(householdId, 99, dto),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.createExpense(householdId, 99, dto)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should throw BadRequestException if payer not in same household', async () => {
-      prismaMock.user.findUnique.mockResolvedValueOnce({ id: 1, householdId: 99 });
+      prismaMock.user.findUnique.mockResolvedValueOnce({
+        id: 1,
+        householdId: 99,
+      });
 
       await expect(
         service.createExpense(householdId, userId, dto),
@@ -102,23 +107,38 @@ describe('ExpenseService', () => {
     });
 
     it('should throw BadRequestException if participants array empty', async () => {
-      prismaMock.user.findUnique.mockResolvedValueOnce({ id: 1, householdId: 10 });
+      prismaMock.user.findUnique.mockResolvedValueOnce({
+        id: 1,
+        householdId: 10,
+      });
 
       await expect(
-        service.createExpense(householdId, userId, { ...dto, participants: [] }),
+        service.createExpense(householdId, userId, {
+          ...dto,
+          participants: [],
+        }),
       ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException if paidById not in participants', async () => {
-      prismaMock.user.findUnique.mockResolvedValueOnce({ id: 1, householdId: 10 });
+      prismaMock.user.findUnique.mockResolvedValueOnce({
+        id: 1,
+        householdId: 10,
+      });
 
       await expect(
-        service.createExpense(householdId, userId, { ...dto, participants: [2, 3] }),
+        service.createExpense(householdId, userId, {
+          ...dto,
+          participants: [2, 3],
+        }),
       ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException if any participant not in same household', async () => {
-      prismaMock.user.findUnique.mockResolvedValueOnce({ id: 1, householdId: 10 });
+      prismaMock.user.findUnique.mockResolvedValueOnce({
+        id: 1,
+        householdId: 10,
+      });
       prismaMock.user.findMany.mockResolvedValueOnce([
         { id: 1, householdId: 10 },
         { id: 2, householdId: 10 },
@@ -163,7 +183,12 @@ describe('ExpenseService', () => {
   describe('getExpenses()', () => {
     it('should return expenses with participants and paidBy', async () => {
       const expenses = [
-        { id: 1, description: 'Groceries', participants: [], paidBy: { id: 1, name: 'Alice' } },
+        {
+          id: 1,
+          description: 'Groceries',
+          participants: [],
+          paidBy: { id: 1, name: 'Alice' },
+        },
       ];
       prismaMock.expense.findMany.mockResolvedValue(expenses);
 
@@ -315,7 +340,9 @@ describe('ExpenseService', () => {
     });
 
     it('should throw BadRequestException if no householdId', async () => {
-      await expect(service.getSettlements(0)).rejects.toThrow(BadRequestException);
+      await expect(service.getSettlements(0)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

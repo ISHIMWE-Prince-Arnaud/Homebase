@@ -1,25 +1,40 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import {
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { HouseholdService } from './household.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeService } from '../realtime/realtime.service';
+import { NotificationService } from '../notification/notification.service';
 import { RealtimeEvents } from '../realtime/realtime.events';
-import { createPrismaMock, createRealtimeMock, type MockPrismaService, type MockRealtimeService } from '../common/testing';
+import {
+  createPrismaMock,
+  createRealtimeMock,
+  createNotificationMock,
+  type MockPrismaService,
+  type MockRealtimeService,
+  type MockNotificationService,
+} from '../common/testing';
 
 describe('HouseholdService', () => {
   let service: HouseholdService;
   let prismaMock: MockPrismaService;
   let realtimeMock: MockRealtimeService;
+  let notificationMock: MockNotificationService;
 
   beforeEach(async () => {
     prismaMock = createPrismaMock();
     realtimeMock = createRealtimeMock();
+    notificationMock = createNotificationMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HouseholdService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: RealtimeService, useValue: realtimeMock },
+        { provide: NotificationService, useValue: notificationMock },
       ],
     }).compile();
 
@@ -39,7 +54,10 @@ describe('HouseholdService', () => {
     };
 
     it('should create household, connects creator, returns with users', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ id: 1, householdId: null });
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 1,
+        householdId: null,
+      });
       prismaMock.household.findUnique.mockResolvedValue(null); // invite code unique
       prismaMock.household.create.mockResolvedValue(household);
       realtimeMock.syncUserHousehold.mockResolvedValue(undefined);
@@ -55,17 +73,24 @@ describe('HouseholdService', () => {
     it('should throw NotFoundException if user not found', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.createHousehold(userId, dto)).rejects.toThrow(NotFoundException);
+      await expect(service.createHousehold(userId, dto)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException if user already in a household', async () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 1, householdId: 99 });
 
-      await expect(service.createHousehold(userId, dto)).rejects.toThrow(BadRequestException);
+      await expect(service.createHousehold(userId, dto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should generate invite code and sync realtime', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ id: 1, householdId: null });
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 1,
+        householdId: null,
+      });
       prismaMock.household.findUnique.mockResolvedValue(null);
       prismaMock.household.create.mockResolvedValue(household);
       realtimeMock.syncUserHousehold.mockResolvedValue(undefined);
@@ -74,7 +99,11 @@ describe('HouseholdService', () => {
 
       const createCall = prismaMock.household.create.mock.calls[0][0];
       expect(createCall.data.inviteCode).toMatch(/^[A-Z0-9]{8}$/);
-      expect(realtimeMock.syncUserHousehold).toHaveBeenCalledWith(userId, 10, null);
+      expect(realtimeMock.syncUserHousehold).toHaveBeenCalledWith(
+        userId,
+        10,
+        null,
+      );
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         10,
         RealtimeEvents.HOUSEHOLD_MEMBER_JOINED,
@@ -96,7 +125,10 @@ describe('HouseholdService', () => {
     };
 
     it('should join household by valid invite code', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ id: 2, householdId: null });
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 2,
+        householdId: null,
+      });
       // $transaction callback receives the mock itself
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
@@ -120,11 +152,16 @@ describe('HouseholdService', () => {
     it('should throw NotFoundException if user not found', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.joinHousehold(userId, dto)).rejects.toThrow(NotFoundException);
+      await expect(service.joinHousehold(userId, dto)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw NotFoundException if invite code invalid', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ id: 2, householdId: null });
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 2,
+        householdId: null,
+      });
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -133,7 +170,9 @@ describe('HouseholdService', () => {
         return await fn(tx);
       });
 
-      await expect(service.joinHousehold(userId, dto)).rejects.toThrow(NotFoundException);
+      await expect(service.joinHousehold(userId, dto)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException if user already in a household', async () => {
@@ -142,7 +181,8 @@ describe('HouseholdService', () => {
         const tx = {
           ...prismaMock,
           household: {
-            findUnique: jest.fn()
+            findUnique: jest
+              .fn()
               .mockResolvedValueOnce(household) // find by inviteCode
               .mockResolvedValueOnce({ id: 99 }), // existing household check
           },
@@ -151,11 +191,16 @@ describe('HouseholdService', () => {
         return await fn(tx);
       });
 
-      await expect(service.joinHousehold(userId, dto)).rejects.toThrow(BadRequestException);
+      await expect(service.joinHousehold(userId, dto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should sync user household room and emit HOUSEHOLD_MEMBER_JOINED', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ id: 2, householdId: null });
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 2,
+        householdId: null,
+      });
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -197,13 +242,20 @@ describe('HouseholdService', () => {
     it('should throw NotFoundException if user not found', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.getMyHousehold(999)).rejects.toThrow(NotFoundException);
+      await expect(service.getMyHousehold(999)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw NotFoundException if user has no household', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ id: 1, householdId: null });
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 1,
+        householdId: null,
+      });
 
-      await expect(service.getMyHousehold(1)).rejects.toThrow(NotFoundException);
+      await expect(service.getMyHousehold(1)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -213,15 +265,17 @@ describe('HouseholdService', () => {
     it('should pass if user belongs to household', async () => {
       prismaMock.user.findUnique.mockResolvedValue({ householdId: 10 });
 
-      await expect(service.ensureUserBelongsToHousehold(1, 10)).resolves.toBeUndefined();
+      await expect(
+        service.ensureUserBelongsToHousehold(1, 10),
+      ).resolves.toBeUndefined();
     });
 
     it('should throw ForbiddenException if user not in household', async () => {
       prismaMock.user.findUnique.mockResolvedValue({ householdId: 99 });
 
-      await expect(
-        service.ensureUserBelongsToHousehold(1, 10),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.ensureUserBelongsToHousehold(1, 10)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
@@ -243,16 +297,21 @@ describe('HouseholdService', () => {
           },
           expense: {
             ...prismaMock.expense,
-            aggregate: jest.fn().mockResolvedValue({ _sum: { totalAmount: 1000 } }),
+            aggregate: jest
+              .fn()
+              .mockResolvedValue({ _sum: { totalAmount: 1000 } }),
             findMany: jest.fn().mockResolvedValue([]),
           },
           expenseParticipant: {
             ...prismaMock.expenseParticipant,
-            aggregate: jest.fn().mockResolvedValue({ _sum: { shareAmount: 1000 } }),
+            aggregate: jest
+              .fn()
+              .mockResolvedValue({ _sum: { shareAmount: 1000 } }),
           },
           payment: {
             ...prismaMock.payment,
-            aggregate: jest.fn()
+            aggregate: jest
+              .fn()
               .mockResolvedValueOnce({ _sum: { amount: 0 } }) // paymentsFrom
               .mockResolvedValueOnce({ _sum: { amount: 0 } }), // paymentsTo
           },
@@ -267,7 +326,11 @@ describe('HouseholdService', () => {
 
       await service.leaveHousehold(userId);
 
-      expect(realtimeMock.syncUserHousehold).toHaveBeenCalledWith(userId, null, householdId);
+      expect(realtimeMock.syncUserHousehold).toHaveBeenCalledWith(
+        userId,
+        null,
+        householdId,
+      );
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         householdId,
         RealtimeEvents.HOUSEHOLD_MEMBER_LEFT,
@@ -287,7 +350,9 @@ describe('HouseholdService', () => {
         return await fn(tx);
       });
 
-      await expect(service.leaveHousehold(userId)).rejects.toThrow(NotFoundException);
+      await expect(service.leaveHousehold(userId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException if user has no household', async () => {
@@ -296,13 +361,17 @@ describe('HouseholdService', () => {
           ...prismaMock,
           user: {
             ...prismaMock.user,
-            findUnique: jest.fn().mockResolvedValue({ id: 1, householdId: null }),
+            findUnique: jest
+              .fn()
+              .mockResolvedValue({ id: 1, householdId: null }),
           },
         };
         return await fn(tx);
       });
 
-      await expect(service.leaveHousehold(userId)).rejects.toThrow(BadRequestException);
+      await expect(service.leaveHousehold(userId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException if outstanding balance (net ≠ 0)', async () => {
@@ -316,16 +385,21 @@ describe('HouseholdService', () => {
           },
           expense: {
             ...prismaMock.expense,
-            aggregate: jest.fn().mockResolvedValue({ _sum: { totalAmount: 3000 } }),
+            aggregate: jest
+              .fn()
+              .mockResolvedValue({ _sum: { totalAmount: 3000 } }),
             findMany: jest.fn().mockResolvedValue([]),
           },
           expenseParticipant: {
             ...prismaMock.expenseParticipant,
-            aggregate: jest.fn().mockResolvedValue({ _sum: { shareAmount: 1000 } }),
+            aggregate: jest
+              .fn()
+              .mockResolvedValue({ _sum: { shareAmount: 1000 } }),
           },
           payment: {
             ...prismaMock.payment,
-            aggregate: jest.fn()
+            aggregate: jest
+              .fn()
               .mockResolvedValueOnce({ _sum: { amount: 0 } })
               .mockResolvedValueOnce({ _sum: { amount: 0 } }),
           },
@@ -333,7 +407,9 @@ describe('HouseholdService', () => {
         return await fn(tx);
       });
 
-      await expect(service.leaveHousehold(userId)).rejects.toThrow(BadRequestException);
+      await expect(service.leaveHousehold(userId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should delete household if last member leaves (cascading deletes)', async () => {
@@ -348,12 +424,16 @@ describe('HouseholdService', () => {
           },
           expense: {
             ...prismaMock.expense,
-            aggregate: jest.fn().mockResolvedValue({ _sum: { totalAmount: 1000 } }),
+            aggregate: jest
+              .fn()
+              .mockResolvedValue({ _sum: { totalAmount: 1000 } }),
             findMany: jest.fn().mockResolvedValue([]),
           },
           expenseParticipant: {
             ...prismaMock.expenseParticipant,
-            aggregate: jest.fn().mockResolvedValue({ _sum: { shareAmount: 1000 } }),
+            aggregate: jest
+              .fn()
+              .mockResolvedValue({ _sum: { shareAmount: 1000 } }),
             deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
           },
           chore: {
@@ -367,7 +447,8 @@ describe('HouseholdService', () => {
           },
           payment: {
             ...prismaMock.payment,
-            aggregate: jest.fn()
+            aggregate: jest
+              .fn()
               .mockResolvedValueOnce({ _sum: { amount: 0 } })
               .mockResolvedValueOnce({ _sum: { amount: 0 } }),
             deleteMany: jest.fn().mockResolvedValue({ count: 0 }),

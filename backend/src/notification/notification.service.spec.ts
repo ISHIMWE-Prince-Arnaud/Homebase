@@ -50,11 +50,21 @@ describe('NotificationService', () => {
           OR: [{ userId: null }, { userId: 1 }],
         },
         orderBy: { createdAt: 'desc' },
+        include: {
+          actor: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
       });
     });
 
     it('should throw BadRequestException if no householdId', async () => {
-      await expect(service.listByHousehold(0, 1)).rejects.toThrow(BadRequestException);
+      await expect(service.listByHousehold(0, 1)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -77,7 +87,9 @@ describe('NotificationService', () => {
     it('should throw NotFoundException if notification not found', async () => {
       prismaMock.notification.updateMany.mockResolvedValue({ count: 0 });
 
-      await expect(service.markRead(10, 999, 1)).rejects.toThrow(NotFoundException);
+      await expect(service.markRead(10, 999, 1)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -135,7 +147,9 @@ describe('NotificationService', () => {
     });
 
     it('should throw BadRequestException if no householdId', async () => {
-      await expect(service.markAllRead(0, 1)).rejects.toThrow(BadRequestException);
+      await expect(service.markAllRead(0, 1)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 });

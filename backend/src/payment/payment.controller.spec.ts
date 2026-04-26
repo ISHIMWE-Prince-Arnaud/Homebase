@@ -18,7 +18,9 @@ describe('PaymentController', () => {
 
   beforeEach(async () => {
     paymentService = {
-      createPayment: jest.fn().mockResolvedValue({ payment: mockPayment, remainingDirectDebt: 500 }),
+      createPayment: jest
+        .fn()
+        .mockResolvedValue({ payment: mockPayment, remainingDirectDebt: 500 }),
       getPayments: jest.fn().mockResolvedValue([mockPayment]),
     } as any;
 
@@ -40,7 +42,10 @@ describe('PaymentController', () => {
       const result = await controller.create(10, 2, dto as any);
 
       expect(paymentService.createPayment).toHaveBeenCalledWith(10, 2, dto);
-      expect(result).toEqual({ payment: mockPayment, remainingDirectDebt: 500 });
+      expect(result).toEqual({
+        payment: mockPayment,
+        remainingDirectDebt: 500,
+      });
     });
   });
 

@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationService } from '../notification/notification.service';
@@ -43,7 +47,13 @@ describe('PaymentService', () => {
     const householdId = 10;
     const fromUserId = 2;
     const dto = { toUserId: 1, amount: 500 };
-    const payment = { id: 1, fromUserId: 2, toUserId: 1, amount: 500, householdId: 10 };
+    const payment = {
+      id: 1,
+      fromUserId: 2,
+      toUserId: 1,
+      amount: 500,
+      householdId: 10,
+    };
 
     // Helper to set up mocks for a valid direct debt scenario
     function setupValidDebtMocks() {
@@ -79,9 +89,9 @@ describe('PaymentService', () => {
     });
 
     it('should throw BadRequestException if no householdId', async () => {
-      await expect(
-        service.createPayment(0, fromUserId, dto),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createPayment(0, fromUserId, dto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException if fromUserId === toUserId', async () => {
@@ -92,11 +102,17 @@ describe('PaymentService', () => {
 
     it('should throw BadRequestException if amount ≤ 0', async () => {
       await expect(
-        service.createPayment(householdId, fromUserId, { toUserId: 1, amount: 0 }),
+        service.createPayment(householdId, fromUserId, {
+          toUserId: 1,
+          amount: 0,
+        }),
       ).rejects.toThrow(BadRequestException);
 
       await expect(
-        service.createPayment(householdId, fromUserId, { toUserId: 1, amount: -100 }),
+        service.createPayment(householdId, fromUserId, {
+          toUserId: 1,
+          amount: -100,
+        }),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -151,7 +167,10 @@ describe('PaymentService', () => {
       setupValidDebtMocks(); // User 2 owes User 1 exactly 1000
 
       await expect(
-        service.createPayment(householdId, fromUserId, { toUserId: 1, amount: 5000 }),
+        service.createPayment(householdId, fromUserId, {
+          toUserId: 1,
+          amount: 5000,
+        }),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -167,9 +186,13 @@ describe('PaymentService', () => {
 
       expect(notificationMock.create).toHaveBeenCalledWith(
         householdId,
-        expect.any(String),
-        'paymentReceived',
+        'paid',
+        'payment_received',
         1, // toUserId
+        2, // fromUserId
+        'payment',
+        1, // payment.id
+        'paid',
       );
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         householdId,

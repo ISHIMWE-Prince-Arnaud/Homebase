@@ -1,4 +1,11 @@
-import { Controller, Delete, Get, Patch, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { HouseholdId } from 'src/common/decorators/household-id.decorator';

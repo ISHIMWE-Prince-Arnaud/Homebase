@@ -53,9 +53,9 @@ describe('ChoreController', () => {
     it('uses HouseholdId decorator and calls service with dto', async () => {
       const dto = { title: 'Clean kitchen', dueDate: '2025-12-31' };
 
-      const result = await controller.create(10, dto as any);
+      const result = await controller.create(10, 1, dto as any);
 
-      expect(choreService.createChore).toHaveBeenCalledWith(10, dto);
+      expect(choreService.createChore).toHaveBeenCalledWith(10, 1, dto);
       expect(result).toEqual(mockChore);
     });
   });
@@ -91,9 +91,9 @@ describe('ChoreController', () => {
     it('calls updateChore with parsed id, householdId, and dto', async () => {
       const dto = { title: 'Updated title' };
 
-      const result = await controller.update(10, '1', dto as any);
+      const result = await controller.update(10, 1, '1', dto as any);
 
-      expect(choreService.updateChore).toHaveBeenCalledWith(1, 10, dto);
+      expect(choreService.updateChore).toHaveBeenCalledWith(1, 10, 1, dto);
       expect(result).toEqual(mockChore);
     });
   });

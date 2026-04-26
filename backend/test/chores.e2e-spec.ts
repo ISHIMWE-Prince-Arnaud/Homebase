@@ -59,7 +59,9 @@ describe('Chores (e2e)', () => {
   describe('CRUD flow', () => {
     it('should create chore → get chores → update → complete → delete', async () => {
       // Create chore
-      const futureDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      const futureDate = new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000,
+      ).toISOString();
       const createRes = await request(app.getHttpServer())
         .post('/chores')
         .set('Cookie', `access_token=${accessToken}`)

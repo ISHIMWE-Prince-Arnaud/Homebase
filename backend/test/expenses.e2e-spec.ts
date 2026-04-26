@@ -73,7 +73,8 @@ describe('Expenses (e2e)', () => {
         });
 
       const cookies2 = registerRes2.headers['set-cookie'];
-      const accessToken2 = cookies2 && cookies2[0] ? cookies2[0].split(';')[0].split('=')[1] : '';
+      const accessToken2 =
+        cookies2 && cookies2[0] ? cookies2[0].split(';')[0].split('=')[1] : '';
       const userId2 = registerRes2.body.user.id;
 
       // Join household

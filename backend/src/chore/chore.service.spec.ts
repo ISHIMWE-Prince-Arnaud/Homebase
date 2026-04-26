@@ -3,23 +3,34 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ChoreService } from './chore.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeService } from '../realtime/realtime.service';
+import { NotificationService } from '../notification/notification.service';
 import { RealtimeEvents } from '../realtime/realtime.events';
-import { createPrismaMock, createRealtimeMock, type MockPrismaService, type MockRealtimeService } from '../common/testing';
+import {
+  createPrismaMock,
+  createRealtimeMock,
+  createNotificationMock,
+  type MockPrismaService,
+  type MockRealtimeService,
+  type MockNotificationService,
+} from '../common/testing';
 
 describe('ChoreService', () => {
   let service: ChoreService;
   let prismaMock: MockPrismaService;
   let realtimeMock: MockRealtimeService;
+  let notificationMock: MockNotificationService;
 
   beforeEach(async () => {
     prismaMock = createPrismaMock();
     realtimeMock = createRealtimeMock();
+    notificationMock = createNotificationMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ChoreService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: RealtimeService, useValue: realtimeMock },
+        { provide: NotificationService, useValue: notificationMock },
       ],
     }).compile();
 
@@ -31,7 +42,12 @@ describe('ChoreService', () => {
   describe('getChoresByHousehold()', () => {
     it('should return chores for a household with assignedTo included', async () => {
       const chores = [
-        { id: 1, title: 'Dishes', householdId: 10, assignedTo: { id: 1, name: 'Alice' } },
+        {
+          id: 1,
+          title: 'Dishes',
+          householdId: 10,
+          assignedTo: { id: 1, name: 'Alice' },
+        },
       ];
       prismaMock.chore.findMany.mockResolvedValue(chores);
 
@@ -59,7 +75,9 @@ describe('ChoreService', () => {
     it('should create chore without assignment', async () => {
       prismaMock.chore.create.mockResolvedValue(createdChore);
 
-      const result = await service.createChore(householdId, { title: 'Dishes' });
+      const result = await service.createChore(householdId, 1, {
+        title: 'Dishes',
+      });
 
       expect(result).toEqual(createdChore);
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
@@ -71,9 +89,12 @@ describe('ChoreService', () => {
 
     it('should create chore with valid assignedToId in same household', async () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 5, householdId: 10 });
-      prismaMock.chore.create.mockResolvedValue({ ...createdChore, assignedTo: { id: 5 } });
+      prismaMock.chore.create.mockResolvedValue({
+        ...createdChore,
+        assignedTo: { id: 5 },
+      });
 
-      const result = await service.createChore(householdId, {
+      const result = await service.createChore(householdId, 1, {
         title: 'Dishes',
         assignedToId: 5,
       });
@@ -85,14 +106,17 @@ describe('ChoreService', () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 5, householdId: 99 });
 
       await expect(
-        service.createChore(householdId, { title: 'Dishes', assignedToId: 5 }),
+        service.createChore(householdId, 1, {
+          title: 'Dishes',
+          assignedToId: 5,
+        }),
       ).rejects.toThrow(BadRequestException);
     });
 
     it('should emit CHORE_CREATED realtime event', async () => {
       prismaMock.chore.create.mockResolvedValue(createdChore);
 
-      await service.createChore(householdId, { title: 'Dishes' });
+      await service.createChore(householdId, 1, { title: 'Dishes' });
 
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         householdId,
@@ -121,7 +145,9 @@ describe('ChoreService', () => {
     it('should throw NotFoundException if chore not found', async () => {
       prismaMock.chore.updateMany.mockResolvedValue({ count: 0 });
 
-      await expect(service.markComplete(999, 10)).rejects.toThrow(NotFoundException);
+      await expect(service.markComplete(999, 10)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -144,7 +170,9 @@ describe('ChoreService', () => {
     it('should throw NotFoundException if chore not found', async () => {
       prismaMock.chore.deleteMany.mockResolvedValue({ count: 0 });
 
-      await expect(service.deleteChore(999, 10)).rejects.toThrow(NotFoundException);
+      await expect(service.deleteChore(999, 10)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -152,7 +180,11 @@ describe('ChoreService', () => {
 
   describe('getChoreById()', () => {
     it('should return chore with assignedTo', async () => {
-      const chore = { id: 1, title: 'Dishes', assignedTo: { id: 5, name: 'Alice' } };
+      const chore = {
+        id: 1,
+        title: 'Dishes',
+        assignedTo: { id: 5, name: 'Alice' },
+      };
       prismaMock.chore.findFirst.mockResolvedValue(chore);
 
       const result = await service.getChoreById(1, 10);
@@ -163,7 +195,9 @@ describe('ChoreService', () => {
     it('should throw NotFoundException if not found', async () => {
       prismaMock.chore.findFirst.mockResolvedValue(null);
 
-      await expect(service.getChoreById(999, 10)).rejects.toThrow(NotFoundException);
+      await expect(service.getChoreById(999, 10)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -175,7 +209,10 @@ describe('ChoreService', () => {
       const updated = { id: 1, title: 'New Title', assignedTo: null };
       prismaMock.chore.update.mockResolvedValue(updated);
 
-      const result = await service.updateChore(1, 10, { title: 'New Title', description: 'Desc' });
+      const result = await service.updateChore(1, 10, 1, {
+        title: 'New Title',
+        description: 'Desc',
+      });
 
       expect(result.title).toBe('New Title');
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
@@ -187,9 +224,13 @@ describe('ChoreService', () => {
 
     it('should update isComplete to true, emits both CHORE_UPDATED and CHORE_COMPLETED', async () => {
       prismaMock.chore.findFirst.mockResolvedValue({ id: 1 });
-      prismaMock.chore.update.mockResolvedValue({ id: 1, isComplete: true, assignedTo: null });
+      prismaMock.chore.update.mockResolvedValue({
+        id: 1,
+        isComplete: true,
+        assignedTo: null,
+      });
 
-      await service.updateChore(1, 10, { isComplete: true });
+      await service.updateChore(1, 10, 1, { isComplete: true });
 
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         10,
@@ -206,9 +247,12 @@ describe('ChoreService', () => {
     it('should update assignedToId, emits CHORE_ASSIGNED', async () => {
       prismaMock.chore.findFirst.mockResolvedValue({ id: 1 });
       prismaMock.user.findUnique.mockResolvedValue({ id: 5, householdId: 10 });
-      prismaMock.chore.update.mockResolvedValue({ id: 1, assignedTo: { id: 5 } });
+      prismaMock.chore.update.mockResolvedValue({
+        id: 1,
+        assignedTo: { id: 5 },
+      });
 
-      await service.updateChore(1, 10, { assignedToId: 5 });
+      await service.updateChore(1, 10, 1, { assignedToId: 5 });
 
       expect(realtimeMock.emitToHousehold).toHaveBeenCalledWith(
         10,
@@ -221,7 +265,7 @@ describe('ChoreService', () => {
       prismaMock.chore.findFirst.mockResolvedValue({ id: 1 });
       prismaMock.chore.update.mockResolvedValue({ id: 1, assignedTo: null });
 
-      await service.updateChore(1, 10, { assignedToId: null });
+      await service.updateChore(1, 10, 1, { assignedToId: null });
 
       const updateCall = prismaMock.chore.update.mock.calls[0][0];
       expect(updateCall.data.assignedTo).toEqual({ disconnect: true });
@@ -230,14 +274,16 @@ describe('ChoreService', () => {
     it('should throw NotFoundException if chore not found', async () => {
       prismaMock.chore.findFirst.mockResolvedValue(null);
 
-      await expect(service.updateChore(999, 10, { title: 'X' })).rejects.toThrow(NotFoundException);
+      await expect(
+        service.updateChore(999, 10, 1, { title: 'X' }),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw BadRequestException if dueDate is in the past', async () => {
       prismaMock.chore.findFirst.mockResolvedValue({ id: 1 });
 
       await expect(
-        service.updateChore(1, 10, { dueDate: '2020-01-01' }),
+        service.updateChore(1, 10, 1, { dueDate: '2020-01-01' }),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -246,7 +292,7 @@ describe('ChoreService', () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 5, householdId: 99 });
 
       await expect(
-        service.updateChore(1, 10, { assignedToId: 5 }),
+        service.updateChore(1, 10, 1, { assignedToId: 5 }),
       ).rejects.toThrow(BadRequestException);
     });
   });

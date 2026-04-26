@@ -26,7 +26,9 @@ describe('NotificationController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationController],
-      providers: [{ provide: NotificationService, useValue: notificationService }],
+      providers: [
+        { provide: NotificationService, useValue: notificationService },
+      ],
     })
       .overrideGuard(JwtGuard)
       .useValue({ canActivate: () => true })

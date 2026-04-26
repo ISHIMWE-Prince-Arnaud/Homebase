@@ -106,7 +106,12 @@ export class ChoreService {
     return chore;
   }
 
-  async updateChore(choreId: number, householdId: number, userId: number, dto: UpdateChoreDto) {
+  async updateChore(
+    choreId: number,
+    householdId: number,
+    userId: number,
+    dto: UpdateChoreDto,
+  ) {
     const existing = await this.prisma.chore.findFirst({
       where: { id: choreId, householdId },
       select: { id: true },
