@@ -21,7 +21,6 @@ export class HealthController {
     return this.health.check([
       () => this.prismaHealth.isHealthy('database'),
       () => this.websocketHealth.isHealthy('websocket'),
-      () => this.memoryHealth.isHealthy('memory'),
     ]);
   }
 
