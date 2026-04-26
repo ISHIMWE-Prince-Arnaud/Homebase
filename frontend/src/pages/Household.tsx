@@ -10,16 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FadeIn, SlideIn } from "@/components/ui/motion";
+import { HouseholdSkeleton } from "@/components/ui/skeletons";
 
 export default function HouseholdPage() {
   const { household, isLoading } = useHousehold();
 
   if (isLoading) {
-    return (
-      <div className="py-10 text-center text-muted-foreground">
-        Loading household...
-      </div>
-    );
+    return <HouseholdSkeleton />;
   }
 
   if (household) {

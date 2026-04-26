@@ -3,7 +3,7 @@ import { useHousehold } from "@/hooks/useHousehold";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Banknote } from "lucide-react";
 import { StaggerContainer, StaggerItem } from "@/components/ui/motion";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PaymentListSkeleton } from "@/components/ui/skeletons";
 
 export function PaymentList() {
   const { payments, isLoading } = usePayments();
@@ -13,11 +13,7 @@ export function PaymentList() {
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">Recent Payments</h3>
       {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2].map((i) => (
-            <Skeleton key={i} className="h-20 w-full" />
-          ))}
-        </div>
+        <PaymentListSkeleton />
       ) : payments?.length === 0 ? (
         <div className="text-center py-8 text-muted-foreground">
           No payments recorded yet

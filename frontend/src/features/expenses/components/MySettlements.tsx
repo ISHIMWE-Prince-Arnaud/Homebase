@@ -2,7 +2,7 @@ import { useExpenses } from "@/hooks/useExpenses";
 import { useHousehold } from "@/hooks/useHousehold";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { MySettlementsSkeleton } from "@/components/ui/skeletons";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export function MySettlements() {
@@ -11,20 +11,7 @@ export function MySettlements() {
   const { user } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-4">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-        </div>
-        <div className="space-y-4">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-        </div>
-      </div>
-    );
+    return <MySettlementsSkeleton />;
   }
 
   const getMemberName = (id: number) => {

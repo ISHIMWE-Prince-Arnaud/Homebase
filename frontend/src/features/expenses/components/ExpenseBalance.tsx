@@ -2,17 +2,14 @@ import { useExpenses } from "@/hooks/useExpenses";
 import { useHousehold } from "@/hooks/useHousehold";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
+import { ExpenseBalanceSkeleton } from "@/components/ui/skeletons";
 
 export function ExpenseBalance() {
   const { balance, settlements, settlementsScale, isLoading } = useExpenses();
   const { household } = useHousehold();
 
   if (isLoading) {
-    return (
-      <div className="py-10 text-center text-muted-foreground">
-        Loading balances...
-      </div>
-    );
+    return <ExpenseBalanceSkeleton />;
   }
 
   const getMemberName = (id: number) => {

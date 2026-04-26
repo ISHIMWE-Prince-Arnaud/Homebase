@@ -6,6 +6,7 @@ import { useHousehold } from "@/hooks/useHousehold";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardStatsSkeleton } from "@/components/ui/skeletons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CheckSquare,
@@ -36,6 +37,31 @@ export default function DashboardPage() {
     useNotifications();
 
   if (!user || !household) return null;
+
+  // Show full skeleton when all stats are loading
+  if (isLoadingChores && isLoadingNeeds && isLoadingExpenses && isLoadingNotifications) {
+    return (
+      <StaggerContainer className="space-y-8">
+        <FadeIn className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Dashboard
+          </h1>
+          <p className="text-muted-foreground">
+            Welcome back,{" "}
+            <span className="font-semibold text-foreground">
+              {user.name.split(" ")[0]}
+            </span>
+            ! Here's what's happening in{" "}
+            <span className="font-semibold text-foreground">
+              {household.name}
+            </span>
+            .
+          </p>
+        </FadeIn>
+        <DashboardStatsSkeleton />
+      </StaggerContainer>
+    );
+  }
 
   // Summaries
   const pendingChores = chores?.filter((c) => !c.isComplete).length || 0;
