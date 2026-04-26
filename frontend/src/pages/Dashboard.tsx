@@ -290,14 +290,16 @@ export default function DashboardPage() {
           direction="right"
           delay={0.3}
           className="flex flex-col h-full w-full">
-          <Card className="flex flex-col h-full">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                Household Members
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent className="flex-1 flex flex-col gap-4">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold tracking-tight">
+              Household Members
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {household.members.length} member{household.members.length !== 1 ? 's' : ''} in your household
+            </p>
+          </div>
+          <Card className="flex flex-col flex-1">
+            <CardContent className="flex-1 flex flex-col gap-4 pt-6">
               <div className="space-y-4">
                 {household.members.slice(0, 3).map((member) => (
                   <div
