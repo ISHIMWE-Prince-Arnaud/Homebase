@@ -112,7 +112,7 @@ describe("DashboardPage Integration", () => {
     expect(screen.getByText(/Quick Actions/i)).toBeInTheDocument();
     expect(screen.getByText(/View Chores/i)).toBeInTheDocument();
     expect(screen.getByText(/Add Expense/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/Household/i)).toHaveLength(3);
+    expect(screen.getAllByText(/Household/i)).toHaveLength(4);
 
     // Check household members section
     expect(screen.getByText(/Household Members/i)).toBeInTheDocument();

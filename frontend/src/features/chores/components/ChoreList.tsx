@@ -37,7 +37,7 @@ export function ChoreList() {
         <Tabs
           defaultValue="all"
           value={filter}
-          onValueChange={(v) => setFilter(v as any)}
+          onValueChange={(v) => setFilter(v as "all" | "active" | "completed")}
           className="w-full sm:w-auto">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>

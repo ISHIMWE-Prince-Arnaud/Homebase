@@ -1,7 +1,6 @@
 import type { Notification } from "../api";
 import { cn } from "@/lib/utils";
 import {
-  Bell,
   CheckCircle,
   CheckSquare,
   Receipt,
@@ -13,7 +12,6 @@ import {
   Users,
   User,
   ExternalLink,
-  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,32 +37,14 @@ interface NotificationItemProps {
   isDeleting?: boolean;
   isNew?: boolean;
   currentUserId?: number;
+  isExpanded?: boolean;
 }
-
-const getNotificationIcon = (type?: string): LucideIcon => {
-  switch (type) {
-    case "chore_assigned":
-      return CheckSquare;
-    case "expense_added":
-      return Receipt;
-    case "payment_received":
-      return CreditCard;
-    case "household_invite":
-      return UserPlus;
-    case "need_added":
-    case "need_purchased":
-      return ShoppingBag;
-    case "system":
-      return Info;
-    default:
-      return Bell;
-  }
-};
 
 const getNotificationPath = (type?: string, entityType?: string, entityId?: number): string => {
   if (entityId && entityType) {
     switch (entityType) {
       case "chore":
+        return `/chores/${entityId}`;
         return `/chores`;
       case "expense":
         return `/expenses`;
@@ -138,7 +118,6 @@ export function NotificationItem({
   isNew = false,
   currentUserId,
 }: NotificationItemProps) {
-  const NotificationIcon = getNotificationIcon(notification.type);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const navigate = useNavigate();
 
@@ -202,7 +181,16 @@ export function NotificationItem({
               ? "bg-muted text-muted-foreground"
               : getNotificationIconStyle(notification.type)
           )}>
-          <NotificationIcon className="h-4 w-4" />
+          {notification.type === "chore_assigned" && <CheckSquare className="h-4 w-4" />}
+          {notification.type === "expense_added" && <Receipt className="h-4 w-4" />}
+          {notification.type === "payment_received" && <CreditCard className="h-4 w-4" />}
+          {notification.type === "need_added" && <ShoppingBag className="h-4 w-4" />}
+          {notification.type === "need_purchased" && <ShoppingBag className="h-4 w-4" />}
+          {notification.type === "household_member_joined" && <UserPlus className="h-4 w-4" />}
+          {notification.type === "household_member_left" && <UserPlus className="h-4 w-4" />}
+          {notification.type === "household_deleted" && <Trash2 className="h-4 w-4" />}
+          {notification.type === "chore_completed" && <CheckCircle className="h-4 w-4" />}
+          {(!notification.type || !["chore_assigned", "expense_added", "payment_received", "need_added", "need_purchased", "household_member_joined", "household_member_left", "household_deleted", "chore_completed"].includes(notification.type)) && <Info className="h-4 w-4" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
