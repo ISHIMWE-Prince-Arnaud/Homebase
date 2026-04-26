@@ -1,8 +1,9 @@
 import { useExpenses } from "@/hooks/useExpenses";
 import { useHousehold } from "@/hooks/useHousehold";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Scale, CheckCircle2 } from "lucide-react";
 import { ExpenseBalanceSkeleton } from "@/components/ui/skeletons";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function ExpenseBalance() {
   const { balance, settlements, settlementsScale, isLoading } = useExpenses();
@@ -70,7 +71,12 @@ export function ExpenseBalance() {
               </div>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No balances found.</p>
+            <EmptyState
+              icon={Scale}
+              title="No balances yet"
+              description="Add expenses to see how costs are shared among household members."
+              size="sm"
+            />
           )}
         </CardContent>
       </Card>
@@ -105,9 +111,12 @@ export function ExpenseBalance() {
               );
             })
           ) : (
-            <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
-              <p className="text-sm">All settled up!</p>
-            </div>
+            <EmptyState
+              icon={CheckCircle2}
+              title="All settled up!"
+              description="Everyone has paid their fair share. No payments needed."
+              size="sm"
+            />
           )}
         </CardContent>
       </Card>

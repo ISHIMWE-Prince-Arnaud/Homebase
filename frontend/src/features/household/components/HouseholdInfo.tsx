@@ -8,7 +8,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Copy, LogOut, Users, Crown, Pencil, Check, X } from "lucide-react";
+import { Copy, LogOut, Users, Crown, Pencil, Check, X, UserPlus } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -151,39 +152,48 @@ export function HouseholdInfo() {
               <Users className="mr-2 h-4 w-4" />
               Members ({household.members.length})
             </h3>
-            <StaggerContainer className="grid gap-2 sm:gap-3 sm:grid-cols-2">
-              {household.members.map((member) => (
-                <StaggerItem key={member.id}>
-                  <div className="group flex items-center gap-2 sm:gap-3 rounded-lg border p-2 sm:p-3 hover:bg-muted/20 transition-colors">
-                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border shrink-0 bg-primary/10">
-                      <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm font-medium">
-                        {member.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-sm font-medium leading-none truncate">
-                          {member.name}
+            {household.members.length === 0 ? (
+              <EmptyState
+                icon={UserPlus}
+                title="No members yet"
+                description="Share your invite code to add members to your household."
+                size="sm"
+              />
+            ) : (
+              <StaggerContainer className="grid gap-2 sm:gap-3 sm:grid-cols-2">
+                {household.members.map((member) => (
+                  <StaggerItem key={member.id}>
+                    <div className="group flex items-center gap-2 sm:gap-3 rounded-lg border p-2 sm:p-3 hover:bg-muted/20 transition-colors">
+                      <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border shrink-0 bg-primary/10">
+                        <AvatarFallback className="bg-primary/10 text-primary text-xs sm:text-sm font-medium">
+                          {member.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
+                            .slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-medium leading-none truncate">
+                            {member.name}
+                          </p>
+                          {isAdmin(member.id) && (
+                            <span title="Household Admin">
+                              <Crown className="h-3 w-3 text-amber-500 shrink-0" />
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {member.email}
                         </p>
-                        {isAdmin(member.id) && (
-                          <span title="Household Admin">
-                            <Crown className="h-3 w-3 text-amber-500 shrink-0" />
-                          </span>
-                        )}
                       </div>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {member.email}
-                      </p>
                     </div>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            )}
           </div>
         </CardContent>
       </Card>

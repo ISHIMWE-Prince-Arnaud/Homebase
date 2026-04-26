@@ -32,7 +32,8 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function CreateExpenseDialog() {
   const [open, setOpen] = useState(false);
@@ -228,47 +229,56 @@ export function CreateExpenseDialog() {
                   <div className="mb-4">
                     <FormLabel className="text-base">Split With</FormLabel>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {household?.members.map((member) => (
-                      <FormField
-                        key={member.id}
-                        control={form.control}
-                        name="participants"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={member.id}
-                              className="flex flex-row items-start space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={
-                                    Array.isArray(field.value)
-                                      ? field.value.includes(member.id)
-                                      : false
-                                  }
-                                  onCheckedChange={(checked) => {
-                                    const current = Array.isArray(field.value)
-                                      ? field.value
-                                      : [];
-                                    return checked
-                                      ? field.onChange([...current, member.id])
-                                      : field.onChange(
-                                          current.filter(
-                                            (value) => value !== member.id
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {member.name}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                  </div>
+                  {household?.members.length === 0 ? (
+                    <EmptyState
+                      icon={Users}
+                      title="No members to split with"
+                      description="Add household members first to split expenses."
+                      size="sm"
+                    />
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      {household?.members.map((member) => (
+                        <FormField
+                          key={member.id}
+                          control={form.control}
+                          name="participants"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={member.id}
+                                className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={
+                                      Array.isArray(field.value)
+                                        ? field.value.includes(member.id)
+                                        : false
+                                    }
+                                    onCheckedChange={(checked) => {
+                                      const current = Array.isArray(field.value)
+                                        ? field.value
+                                        : [];
+                                      return checked
+                                        ? field.onChange([...current, member.id])
+                                        : field.onChange(
+                                            current.filter(
+                                              (value) => value !== member.id
+                                            )
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {member.name}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

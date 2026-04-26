@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, Banknote } from "lucide-react";
 import { StaggerContainer, StaggerItem } from "@/components/ui/motion";
 import { PaymentListSkeleton } from "@/components/ui/skeletons";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function PaymentList() {
   const { payments, isLoading } = usePayments();
@@ -15,9 +16,12 @@ export function PaymentList() {
       {isLoading ? (
         <PaymentListSkeleton />
       ) : payments?.length === 0 ? (
-        <div className="text-center py-8 text-muted-foreground">
-          No payments recorded yet
-        </div>
+        <EmptyState
+          icon={Banknote}
+          title="No payments recorded"
+          description="Record a payment when you settle a debt with a household member."
+          size="sm"
+        />
       ) : (
         <StaggerContainer className="space-y-2">
           {payments?.map((payment) => {

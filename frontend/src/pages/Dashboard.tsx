@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DashboardStatsSkeleton } from "@/components/ui/skeletons";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CheckSquare,
@@ -17,6 +18,7 @@ import {
   CreditCard,
   Users,
   CheckCircle2,
+  UserPlus,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -326,35 +328,44 @@ export default function DashboardPage() {
           </div>
           <Card className="flex flex-col flex-1">
             <CardContent className="flex-1 flex flex-col gap-4 pt-6">
-              <div className="space-y-4">
-                {household.members.slice(0, 3).map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center justify-between group">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10 border-2 border-background ring-1 ring-muted transition-transform group-hover:scale-105 bg-primary/10">
-                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                          {member.name[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium leading-none">
-                          {member.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {member.email}
-                        </p>
+              {household.members.length === 0 ? (
+                <EmptyState
+                  icon={UserPlus}
+                  title="No members yet"
+                  description="Invite members to join your household using the invite code."
+                  size="sm"
+                />
+              ) : (
+                <div className="space-y-4">
+                  {household.members.slice(0, 3).map((member) => (
+                    <div
+                      key={member.id}
+                      className="flex items-center justify-between group">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10 border-2 border-background ring-1 ring-muted transition-transform group-hover:scale-105 bg-primary/10">
+                          <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                            {member.name[0]?.toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-medium leading-none">
+                            {member.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {member.email}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                {household.members.length > 3 && (
-                  <p className="text-xs text-muted-foreground text-center pt-2">
-                    +{household.members.length - 3} more members
-                  </p>
-                )}
-              </div>
+                  {household.members.length > 3 && (
+                    <p className="text-xs text-muted-foreground text-center pt-2">
+                      +{household.members.length - 3} more members
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div className="mt-auto pt-4">
                 <Button

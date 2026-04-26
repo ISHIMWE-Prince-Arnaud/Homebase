@@ -5,9 +5,10 @@ import { useState } from "react";
 import type { Need } from "../api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, ShoppingBag, AlertCircle } from "lucide-react";
 import { NeedListSkeleton } from "@/components/ui/skeletons";
 import { StaggerContainer, StaggerItem } from "@/components/ui/motion";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function NeedList() {
   const { needs, isLoading, error } = useNeeds();
@@ -27,9 +28,11 @@ export function NeedList() {
 
   if (error) {
     return (
-      <div className="py-10 text-center text-destructive">
-        Failed to load shopping list.
-      </div>
+      <EmptyState
+        icon={AlertCircle}
+        title="Failed to load shopping list"
+        description="Something went wrong while fetching your items. Please try again later."
+      />
     );
   }
 
@@ -48,19 +51,21 @@ export function NeedList() {
 
   const renderList = (items: Need[], emptyMessage: string) => {
     if (items.length === 0) {
+      if (searchQuery) {
+        return (
+          <EmptyState
+            icon={ShoppingBag}
+            title={`No items found matching "${searchQuery}"`}
+            description="Try a different search term."
+          />
+        );
+      }
       return (
-        <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
-          <p>
-            {searchQuery
-              ? `No items found matching "${searchQuery}"`
-              : emptyMessage}
-          </p>
-          <p className="text-sm">
-            {searchQuery
-              ? "Try a different search term."
-              : "Add items to your shopping list."}
-          </p>
-        </div>
+        <EmptyState
+          icon={ShoppingBag}
+          title={emptyMessage}
+          description="Add items to your shopping list to keep track of what your household needs."
+        />
       );
     }
 

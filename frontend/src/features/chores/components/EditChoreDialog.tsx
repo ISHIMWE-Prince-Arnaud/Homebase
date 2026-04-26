@@ -34,11 +34,12 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Users } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import type { Chore } from "../api";
 import { useEffect } from "react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type EditChoreDialogProps = {
   chore: Chore;
@@ -235,31 +236,40 @@ export function EditChoreDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Assigned To</FormLabel>
-                  <Select
-                    onValueChange={(val) =>
-                      field.onChange(val === "unassigned" ? null : Number(val))
-                    }
-                    value={
-                      field.value === null || field.value === undefined
-                        ? "unassigned"
-                        : String(field.value)
-                    }>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a member" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="unassigned">Unassigned</SelectItem>
-                      {household?.members.map((member) => (
-                        <SelectItem
-                          key={member.id}
-                          value={member.id.toString()}>
-                          {member.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {household?.members.length === 0 ? (
+                    <EmptyState
+                      icon={Users}
+                      title="No members to assign"
+                      description="Add household members first to assign chores."
+                      size="sm"
+                    />
+                  ) : (
+                    <Select
+                      onValueChange={(val) =>
+                        field.onChange(val === "unassigned" ? null : Number(val))
+                      }
+                      value={
+                        field.value === null || field.value === undefined
+                          ? "unassigned"
+                          : String(field.value)
+                      }>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a member" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
+                        {household?.members.map((member) => (
+                          <SelectItem
+                            key={member.id}
+                            value={member.id.toString()}>
+                            {member.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

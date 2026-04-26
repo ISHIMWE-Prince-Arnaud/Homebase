@@ -4,6 +4,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { ChoreListSkeleton } from "@/components/ui/skeletons";
 import { StaggerContainer, StaggerItem } from "@/components/ui/motion";
+import { EmptyState } from "@/components/ui/empty-state";
+import { CheckSquare, AlertCircle } from "lucide-react";
 
 export function ChoreList() {
   const { chores, isLoading, error } = useChores();
@@ -15,9 +17,11 @@ export function ChoreList() {
 
   if (error) {
     return (
-      <div className="py-10 text-center text-destructive">
-        Failed to load chores.
-      </div>
+      <EmptyState
+        icon={AlertCircle}
+        title="Failed to load chores"
+        description="Something went wrong while fetching your chores. Please try again later."
+      />
     );
   }
 
@@ -44,10 +48,15 @@ export function ChoreList() {
       </div>
 
       {filteredChores?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
-          <p className="text-lg font-medium">No chores found</p>
-          <p className="text-sm">Try adjusting your filters</p>
-        </div>
+        <EmptyState
+          icon={CheckSquare}
+          title="No chores found"
+          description={
+            filter === "all"
+              ? "Get started by adding your first chore to the household."
+              : "Try adjusting your filters to see more results."
+          }
+        />
       ) : (
         <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredChores?.map((chore) => (
