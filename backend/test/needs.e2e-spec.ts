@@ -2,13 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { setupE2E, teardownE2E, cleanupDatabase, prisma } from './setup.e2e';
+import { setupE2E, teardownE2E, cleanupDatabase } from './setup.e2e';
 
 describe('Needs (e2e)', () => {
   let app: INestApplication;
   let accessToken: string;
-  let householdId: number;
-  let userId: number;
 
   beforeAll(async () => {
     await setupE2E();
@@ -31,6 +29,7 @@ describe('Needs (e2e)', () => {
 
     // Register and login
     const timestamp = Date.now();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const registerRes = await request(app.getHttpServer())
       .post('/auth/register')
       .send({
@@ -43,15 +42,13 @@ describe('Needs (e2e)', () => {
     if (cookies && cookies[0]) {
       accessToken = cookies[0].split(';')[0].split('=')[1];
     }
-    userId = registerRes.body.user.id;
 
     // Create household
-    const householdRes = await request(app.getHttpServer())
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    await request(app.getHttpServer())
       .post('/households')
       .set('Cookie', `access_token=${accessToken}`)
       .send({ name: 'Test Household' });
-
-    householdId = householdRes.body.id;
   });
 
   afterEach(async () => {
@@ -61,6 +58,7 @@ describe('Needs (e2e)', () => {
   describe('Need flow', () => {
     it('should create need → update → mark purchased → delete', async () => {
       // Create need
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const createRes = await request(app.getHttpServer())
         .post('/needs')
         .set('Cookie', `access_token=${accessToken}`)
@@ -72,10 +70,13 @@ describe('Needs (e2e)', () => {
         .expect(201);
 
       expect(createRes.body).toHaveProperty('id');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(createRes.body.name).toBe('Milk');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const needId = createRes.body.id;
 
       // Update need
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .patch(`/needs/${needId}`)
         .set('Cookie', `access_token=${accessToken}`)
@@ -83,6 +84,7 @@ describe('Needs (e2e)', () => {
         .expect(200);
 
       // Mark purchased
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .patch(`/needs/${needId}/purchase`)
         .set('Cookie', `access_token=${accessToken}`)
@@ -90,12 +92,14 @@ describe('Needs (e2e)', () => {
         .expect(200);
 
       // Delete need
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .delete(`/needs/${needId}`)
         .set('Cookie', `access_token=${accessToken}`)
         .expect(200);
 
       // Verify deleted
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const getRes = await request(app.getHttpServer())
         .get('/needs')
         .set('Cookie', `access_token=${accessToken}`)

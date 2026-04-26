@@ -30,6 +30,7 @@ describe('Security E2E Tests', () => {
       const requests = Array(11)
         .fill(null)
         .map(() =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           request(app.getHttpServer()).post('/auth/login').send(loginDto),
         );
 
@@ -47,6 +48,7 @@ describe('Security E2E Tests', () => {
 
   describe('CORS', () => {
     it('Missing Origin header on CORS request returns 403 or blocked', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .get('/auth/users/me')
         .set('Origin', '');
@@ -65,6 +67,7 @@ describe('Security E2E Tests', () => {
         data: 'x'.repeat(12000),
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(largePayload);
@@ -75,6 +78,7 @@ describe('Security E2E Tests', () => {
 
   describe('Security Headers (Helmet)', () => {
     it('Response includes all helmet headers', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer()).get('/');
 
       expect(response.headers['x-content-type-options']).toBe('nosniff');
@@ -84,12 +88,14 @@ describe('Security E2E Tests', () => {
     });
 
     it('X-Content-Type-Options: nosniff is present in all responses', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer()).get('/');
 
       expect(response.headers['x-content-type-options']).toBe('nosniff');
     });
 
     it('X-Frame-Options: DENY is present in all responses', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer()).get('/');
 
       expect(response.headers['x-frame-options']).toBe('DENY');
@@ -101,6 +107,7 @@ describe('Security E2E Tests', () => {
       const isProd = process.env.NODE_ENV === 'production';
 
       if (isProd) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const response = await request(app.getHttpServer()).get('/');
 
         expect(response.headers['strict-transport-security']).toBeDefined();

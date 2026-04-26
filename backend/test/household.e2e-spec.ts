@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { setupE2E, teardownE2E, cleanupDatabase, prisma } from './setup.e2e';
+import { setupE2E, teardownE2E, cleanupDatabase } from './setup.e2e';
 
 describe('Household (e2e)', () => {
   let app: INestApplication;
@@ -31,6 +31,7 @@ describe('Household (e2e)', () => {
     // Register and login to get token
     const timestamp = Date.now();
     userEmail = `household${timestamp}@example.com`;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const registerRes = await request(app.getHttpServer())
       .post('/auth/register')
       .send({
@@ -52,6 +53,7 @@ describe('Household (e2e)', () => {
   describe('Full household flow', () => {
     it('should register → create household → get household → join with invite code', async () => {
       // Create household
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const createRes = await request(app.getHttpServer())
         .post('/households')
         .set('Cookie', `access_token=${accessToken}`)
@@ -60,19 +62,24 @@ describe('Household (e2e)', () => {
 
       expect(createRes.body).toHaveProperty('id');
       expect(createRes.body).toHaveProperty('inviteCode');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const inviteCode = createRes.body.inviteCode;
 
       // Get my household
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const getRes = await request(app.getHttpServer())
         .get('/households/me')
         .set('Cookie', `access_token=${accessToken}`)
         .expect(200);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(getRes.body.id).toBe(createRes.body.id);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(getRes.body.name).toBe('Test Household');
 
       // Register second user
       const timestamp2 = Date.now() + 1;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const registerRes2 = await request(app.getHttpServer())
         .post('/auth/register')
         .send({
@@ -86,12 +93,15 @@ describe('Household (e2e)', () => {
         cookies2 && cookies2[0] ? cookies2[0].split(';')[0].split('=')[1] : '';
 
       // Join household with invite code
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const joinRes = await request(app.getHttpServer())
         .post('/households/join')
         .set('Cookie', `access_token=${accessToken2}`)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         .send({ inviteCode })
         .expect(200);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(joinRes.body.id).toBe(createRes.body.id);
     });
   });
@@ -99,20 +109,23 @@ describe('Household (e2e)', () => {
   describe('Leave household flow', () => {
     it('should create household → leave household', async () => {
       // Create household
-      const createRes = await request(app.getHttpServer())
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await request(app.getHttpServer())
         .post('/households')
         .set('Cookie', `access_token=${accessToken}`)
         .send({ name: 'Test Household' })
         .expect(201);
 
       // Leave household
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .post('/households/leave')
         .set('Cookie', `access_token=${accessToken}`)
         .expect(200);
 
       // Verify user has no household
-      const getRes = await request(app.getHttpServer())
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await request(app.getHttpServer())
         .get('/households/me')
         .set('Cookie', `access_token=${accessToken}`)
         .expect(404);

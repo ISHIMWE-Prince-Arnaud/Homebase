@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { setupE2E, teardownE2E, cleanupDatabase, prisma } from './setup.e2e';
+import { setupE2E, teardownE2E, cleanupDatabase } from './setup.e2e';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;
@@ -40,13 +40,16 @@ describe('Auth (e2e)', () => {
         name: 'Test User',
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .post('/auth/register')
         .send(registerDto)
         .expect(201);
 
       expect(response.body).toHaveProperty('user');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.user.email).toBe(registerDto.email);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.user.name).toBe(registerDto.name);
       const cookies = response.headers['set-cookie'];
       expect(cookies).toBeDefined();
@@ -62,11 +65,13 @@ describe('Auth (e2e)', () => {
       };
 
       // Register first user
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .post('/auth/register')
         .send(registerDto);
 
       // Try to register again with same email
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .post('/auth/register')
         .send(registerDto)
@@ -81,6 +86,7 @@ describe('Auth (e2e)', () => {
       const timestamp = Date.now();
       loginEmail = `login${timestamp}@example.com`;
       // Register a user for login tests
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer()).post('/auth/register').send({
         email: loginEmail,
         password: 'Password123!',
@@ -94,12 +100,14 @@ describe('Auth (e2e)', () => {
         password: 'Password123!',
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(loginDto)
         .expect(201);
 
       expect(response.body).toHaveProperty('user');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(response.body.user.email).toBe(loginDto.email);
       const cookies = response.headers['set-cookie'];
       expect(cookies).toBeDefined();
@@ -112,6 +120,7 @@ describe('Auth (e2e)', () => {
         password: 'WrongPassword!',
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer())
         .post('/auth/login')
         .send(loginDto)
@@ -125,6 +134,7 @@ describe('Auth (e2e)', () => {
     beforeEach(async () => {
       const timestamp = Date.now();
       // Register and login to get token
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const registerRes = await request(app.getHttpServer())
         .post('/auth/register')
         .send({
@@ -140,6 +150,7 @@ describe('Auth (e2e)', () => {
     });
 
     it('should return user profile with valid cookie', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .get('/auth/users/me')
         .set('Cookie', `access_token=${accessToken}`)
@@ -151,12 +162,14 @@ describe('Auth (e2e)', () => {
     });
 
     it('should return 401 without cookie', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await request(app.getHttpServer()).get('/auth/users/me').expect(401);
     });
   });
 
   describe('POST /auth/logout', () => {
     it('should clear cookie and return message', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const response = await request(app.getHttpServer())
         .post('/auth/logout')
         .expect(201);
