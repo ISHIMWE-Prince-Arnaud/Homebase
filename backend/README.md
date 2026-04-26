@@ -59,6 +59,28 @@ API runs on http://localhost:3000 by default.
 - Protected endpoints use `JwtGuard` which extracts the token from cookies (no `Authorization` header required).
 - For browser clients, configure your HTTP client with `withCredentials: true` and enable CORS with credentials (already configured in `src/main.ts`).
 
+## Deployment
+
+### Render.com (Recommended)
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions.
+
+Quick deploy:
+1. Push to GitHub
+2. In Render: New → Blueprint → Connect repo
+3. Render auto-creates database and web service
+4. Update `FRONTEND_URL` env var with your frontend URL
+
+### Environment Variables (Production)
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `JWT_SECRET` | Secret key for JWT signing (generate with `node scripts/jwt-secret.js`) |
+| `FRONTEND_URL` | Production frontend URL (for CORS) |
+| `PORT` | Server port (default: 3000) |
+| `NODE_ENV` | Set to `production` |
+
 ## Documentation
 
 - Start here: ./docs/README.md

@@ -30,12 +30,15 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  // Enable CORS for all origins
+  // Enable CORS - use FRONTEND_URL in production, allow all in development
+  const frontendUrl = process.env.FRONTEND_URL;
+  const isDev = process.env.NODE_ENV !== 'production';
+
   app.enableCors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
-    credentials: true, // Allow sending cookies and authorization headers
-    maxAge: 86400, // Cache preflight for 24 hours
+    origin: isDev ? '*' : frontendUrl || '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    maxAge: 86400,
   });
 
   void app.listen(process.env.PORT ?? 3000);

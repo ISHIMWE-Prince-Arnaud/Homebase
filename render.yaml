@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: homebase-api
+    runtime: node
+    plan: starter
+    env: node
+    buildCommand: cd backend && npm install && npm run build && npx prisma migrate deploy
+    startCommand: cd backend && npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: homebase-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: "604800"
+      - key: FRONTEND_URL
+        value: https://joinhomebase.vercel.app
+      - key: THROTTLE_TTL_SHORT
+        value: "60000"
+      - key: THROTTLE_LIMIT_SHORT
+        value: "5"
+      - key: THROTTLE_TTL_MEDIUM
+        value: "900000"
+      - key: THROTTLE_LIMIT_MEDIUM
+        value: "60"
+      - key: THROTTLE_TTL_LONG
+        value: "3600000"
+      - key: THROTTLE_LIMIT_LONG
+        value: "200"
+
+databases:
+  - name: homebase-db
+    plan: starter
+    databaseName: homebase
+    user: homebase
