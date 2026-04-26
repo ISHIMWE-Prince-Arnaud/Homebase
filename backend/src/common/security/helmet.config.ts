@@ -6,7 +6,7 @@ export const helmetConfig = {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "https://avatar.iran.liara.run", "data:"],
+      imgSrc: ["'self'", 'https://avatar.iran.liara.run', 'data:'],
       connectSrc: [
         "'self'",
         process.env.FRONTEND_URL || 'http://localhost:5173',

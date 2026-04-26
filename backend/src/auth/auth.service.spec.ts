@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  ConflictException,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -38,7 +42,11 @@ describe('AuthService', () => {
   // ─── register() ────────────────────────────────────────────────────────────────
 
   describe('register()', () => {
-    const registerDto = { name: 'John', email: 'john@test.com', password: 'secret123' };
+    const registerDto = {
+      name: 'John',
+      email: 'john@test.com',
+      password: 'secret123',
+    };
     const hashedPassword = '$2b$10$hashedpassword';
     const createdUser = {
       id: 1,
@@ -67,7 +75,9 @@ describe('AuthService', () => {
     it('should throw ConflictException if email already exists', async () => {
       prismaMock.user.findUnique.mockResolvedValue(createdUser);
 
-      await expect(service.register(registerDto)).rejects.toThrow(ConflictException);
+      await expect(service.register(registerDto)).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('should hash password with bcrypt before saving', async () => {
@@ -89,9 +99,7 @@ describe('AuthService', () => {
       await service.register(registerDto);
 
       const createCall = prismaMock.user.create.mock.calls[0][0];
-      expect(createCall.data.password).toMatch(
-        /^\$2b\$10\$/
-      );
+      expect(createCall.data.password).toMatch(/^\$2b\$10\$/);
     });
   });
 
@@ -123,14 +131,18 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException if user not found', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException if password is wrong', async () => {
       prismaMock.user.findUnique.mockResolvedValue(user);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -150,7 +162,10 @@ describe('AuthService', () => {
 
       const result = service.generateToken(user as any);
 
-      expect(jwtService.sign).toHaveBeenCalledWith({ sub: 5, email: 'a@b.com' });
+      expect(jwtService.sign).toHaveBeenCalledWith({
+        sub: 5,
+        email: 'a@b.com',
+      });
       expect(result).toEqual({
         accessToken: 'test-token',
         user: { id: 5, email: 'a@b.com', name: 'Alice' },
@@ -177,7 +192,9 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException if user not found', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.getProfile(999)).rejects.toThrow(UnauthorizedException);
+      await expect(service.getProfile(999)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -203,7 +220,9 @@ describe('AuthService', () => {
     });
 
     it('should update password when currentPassword is valid and new is different', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ password: hashedPassword });
+      prismaMock.user.findUnique.mockResolvedValue({
+        password: hashedPassword,
+      });
       (bcrypt.compare as jest.Mock)
         .mockResolvedValueOnce(true) // currentPassword valid
         .mockResolvedValueOnce(false); // newPassword is different
@@ -236,7 +255,9 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if currentPassword is wrong', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ password: hashedPassword });
+      prismaMock.user.findUnique.mockResolvedValue({
+        password: hashedPassword,
+      });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
@@ -248,7 +269,9 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException if newPassword same as old', async () => {
-      prismaMock.user.findUnique.mockResolvedValue({ password: hashedPassword });
+      prismaMock.user.findUnique.mockResolvedValue({
+        password: hashedPassword,
+      });
       (bcrypt.compare as jest.Mock)
         .mockResolvedValueOnce(true) // currentPassword valid
         .mockResolvedValueOnce(true); // newPassword same as old
@@ -262,9 +285,9 @@ describe('AuthService', () => {
     });
 
     it('should throw BadRequestException if no updates provided', async () => {
-      await expect(
-        service.updateProfile(userId, {}),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.updateProfile(userId, {})).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 });

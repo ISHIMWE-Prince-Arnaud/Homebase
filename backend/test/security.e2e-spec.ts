@@ -27,14 +27,14 @@ describe('Security E2E Tests', () => {
       };
 
       // Make 11 requests to exceed the limit
-      const requests = Array(11).fill(null).map(() =>
-        request(app.getHttpServer())
-          .post('/auth/login')
-          .send(loginDto),
-      );
+      const requests = Array(11)
+        .fill(null)
+        .map(() =>
+          request(app.getHttpServer()).post('/auth/login').send(loginDto),
+        );
 
       const responses = await Promise.all(requests);
-      
+
       // First 10 should succeed (or fail with auth error, not rate limit)
       for (let i = 0; i < 10; i++) {
         expect([200, 401, 404]).toContain(responses[i].status);
@@ -75,8 +75,7 @@ describe('Security E2E Tests', () => {
 
   describe('Security Headers (Helmet)', () => {
     it('Response includes all helmet headers', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/');
+      const response = await request(app.getHttpServer()).get('/');
 
       expect(response.headers['x-content-type-options']).toBe('nosniff');
       expect(response.headers['x-frame-options']).toBe('DENY');
@@ -85,15 +84,13 @@ describe('Security E2E Tests', () => {
     });
 
     it('X-Content-Type-Options: nosniff is present in all responses', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/');
+      const response = await request(app.getHttpServer()).get('/');
 
       expect(response.headers['x-content-type-options']).toBe('nosniff');
     });
 
     it('X-Frame-Options: DENY is present in all responses', async () => {
-      const response = await request(app.getHttpServer())
-        .get('/');
+      const response = await request(app.getHttpServer()).get('/');
 
       expect(response.headers['x-frame-options']).toBe('DENY');
     });
@@ -102,10 +99,9 @@ describe('Security E2E Tests', () => {
       // This test would need to run with NODE_ENV=production
       // For now, we'll skip it in development
       const isProd = process.env.NODE_ENV === 'production';
-      
+
       if (isProd) {
-        const response = await request(app.getHttpServer())
-          .get('/');
+        const response = await request(app.getHttpServer()).get('/');
 
         expect(response.headers['strict-transport-security']).toBeDefined();
       }

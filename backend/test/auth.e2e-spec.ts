@@ -81,13 +81,11 @@ describe('Auth (e2e)', () => {
       const timestamp = Date.now();
       loginEmail = `login${timestamp}@example.com`;
       // Register a user for login tests
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send({
-          email: loginEmail,
-          password: 'Password123!',
-          name: 'Login User',
-        });
+      await request(app.getHttpServer()).post('/auth/register').send({
+        email: loginEmail,
+        password: 'Password123!',
+        name: 'Login User',
+      });
     });
 
     it('should login with valid credentials, set cookie', async () => {

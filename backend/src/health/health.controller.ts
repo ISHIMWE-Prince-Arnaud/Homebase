@@ -1,5 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
+import {
+  HealthCheck,
+  HealthCheckService,
+  TypeOrmHealthIndicator,
+} from '@nestjs/terminus';
 import { PrismaHealthIndicator } from './indicators/prisma.health';
 import { WebsocketHealthIndicator } from './indicators/websocket.health';
 import { MemoryHealthIndicator } from './indicators/memory.health';
@@ -28,9 +32,7 @@ export class HealthController {
   @Get('live')
   @HealthCheck()
   live() {
-    return this.health.check([
-      () => this.prismaHealth.isHealthy('database'),
-    ]);
+    return this.health.check([() => this.prismaHealth.isHealthy('database')]);
   }
 
   @Get('ready')

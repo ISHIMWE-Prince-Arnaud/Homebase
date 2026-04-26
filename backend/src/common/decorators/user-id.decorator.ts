@@ -4,7 +4,10 @@ import {
   ExecutionContext,
 } from '@nestjs/common';
 
-export const userIdFactory = (_data: unknown, ctx: ExecutionContext): number => {
+export const userIdFactory = (
+  _data: unknown,
+  ctx: ExecutionContext,
+): number => {
   const req = ctx.switchToHttp().getRequest<{ user?: { id?: number } }>();
   const id = req.user?.id;
   if (typeof id !== 'number') {

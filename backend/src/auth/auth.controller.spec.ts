@@ -2,6 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './guards/jwt.guard';
+import {
+  AuthThrottlerGuard,
+  ProfileUpdateThrottlerGuard,
+} from 'src/common/guards/throttler.guards';
 import type { Response } from 'express';
 
 describe('AuthController', () => {
@@ -16,8 +20,12 @@ describe('AuthController', () => {
 
   beforeEach(async () => {
     authService = {
-      register: jest.fn().mockResolvedValue({ accessToken: 'token', user: mockUser }),
-      login: jest.fn().mockResolvedValue({ accessToken: 'token', user: mockUser }),
+      register: jest
+        .fn()
+        .mockResolvedValue({ accessToken: 'token', user: mockUser }),
+      login: jest
+        .fn()
+        .mockResolvedValue({ accessToken: 'token', user: mockUser }),
       getProfile: jest.fn().mockResolvedValue(mockUser),
       updateProfile: jest.fn().mockResolvedValue(mockUser),
     } as any;
@@ -27,6 +35,10 @@ describe('AuthController', () => {
       providers: [{ provide: AuthService, useValue: authService }],
     })
       .overrideGuard(JwtGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(AuthThrottlerGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(ProfileUpdateThrottlerGuard)
       .useValue({ canActivate: () => true })
       .compile();
 

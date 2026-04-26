@@ -10,6 +10,10 @@ import { RealtimeModule } from '../realtime/realtime.module';
 @Module({
   imports: [TerminusModule, PrismaModule, RealtimeModule],
   controllers: [HealthController],
-  providers: [PrismaHealthIndicator, WebsocketHealthIndicator, MemoryHealthIndicator],
+  providers: [
+    PrismaHealthIndicator,
+    WebsocketHealthIndicator,
+    MemoryHealthIndicator,
+  ],
 })
 export class HealthModule {}

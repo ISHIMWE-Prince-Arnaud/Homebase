@@ -8,7 +8,10 @@ import type { Request } from 'express';
 import type { Response } from 'express';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserId } from 'src/common/decorators/user-id.decorator';
-import { AuthThrottlerGuard, ProfileUpdateThrottlerGuard } from 'src/common/guards/throttler.guards';
+import {
+  AuthThrottlerGuard,
+  ProfileUpdateThrottlerGuard,
+} from 'src/common/guards/throttler.guards';
 
 @Controller('auth')
 export class AuthController {

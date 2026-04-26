@@ -1,7 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext } from '@nestjs/common';
-import { AuthThrottlerGuard, ProfileUpdateThrottlerGuard, ApiThrottlerGuard } from './throttler.guards';
+import {
+  AuthThrottlerGuard,
+  ProfileUpdateThrottlerGuard,
+  ApiThrottlerGuard,
+} from './throttler.guards';
 import { throttlerConfig } from '../security/throttler.config';
+import { Reflector } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 describe('Throttler Guards', () => {
   let authGuard: AuthThrottlerGuard;
@@ -10,22 +16,33 @@ describe('Throttler Guards', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        ThrottlerModule.forRoot([
+          {
+            ttl: 60000,
+            limit: 10,
+          },
+        ]),
+      ],
       providers: [
         AuthThrottlerGuard,
         ProfileUpdateThrottlerGuard,
         ApiThrottlerGuard,
+        Reflector,
       ],
     }).compile();
 
     authGuard = module.get<AuthThrottlerGuard>(AuthThrottlerGuard);
-    profileUpdateGuard = module.get<ProfileUpdateThrottlerGuard>(ProfileUpdateThrottlerGuard);
+    profileUpdateGuard = module.get<ProfileUpdateThrottlerGuard>(
+      ProfileUpdateThrottlerGuard,
+    );
     apiGuard = module.get<ApiThrottlerGuard>(ApiThrottlerGuard);
   });
 
   describe('AuthThrottlerGuard', () => {
     it('should have correct throttler details for auth endpoints', () => {
       const details = authGuard['getThrottlerDetails']();
-      
+
       expect(details).toEqual({
         ttl: throttlerConfig.ttl.short,
         limit: throttlerConfig.limit.short,
@@ -36,7 +53,7 @@ describe('Throttler Guards', () => {
   describe('ProfileUpdateThrottlerGuard', () => {
     it('should have correct throttler details for profile updates', () => {
       const details = profileUpdateGuard['getThrottlerDetails']();
-      
+
       expect(details).toEqual({
         ttl: 60000, // 1 minute
         limit: 20, // 20 requests per minute
@@ -47,7 +64,7 @@ describe('Throttler Guards', () => {
   describe('ApiThrottlerGuard', () => {
     it('should have correct throttler details for general API', () => {
       const details = apiGuard['getThrottlerDetails']();
-      
+
       expect(details).toEqual({
         ttl: throttlerConfig.ttl.medium,
         limit: throttlerConfig.limit.medium,

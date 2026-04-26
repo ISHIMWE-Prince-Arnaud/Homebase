@@ -22,8 +22,12 @@ describe('HouseholdId decorator', () => {
       }),
     } as unknown as ExecutionContext;
 
-    expect(() => householdIdFactory(null, mockCtx)).toThrow(BadRequestException);
-    expect(() => householdIdFactory(null, mockCtx)).toThrow('householdId is missing');
+    expect(() => householdIdFactory(null, mockCtx)).toThrow(
+      BadRequestException,
+    );
+    expect(() => householdIdFactory(null, mockCtx)).toThrow(
+      'householdId is missing',
+    );
   });
 
   it('throws BadRequestException when user is undefined', () => {
@@ -33,8 +37,12 @@ describe('HouseholdId decorator', () => {
       }),
     } as unknown as ExecutionContext;
 
-    expect(() => householdIdFactory(null, mockCtx)).toThrow(BadRequestException);
-    expect(() => householdIdFactory(null, mockCtx)).toThrow('householdId is missing');
+    expect(() => householdIdFactory(null, mockCtx)).toThrow(
+      BadRequestException,
+    );
+    expect(() => householdIdFactory(null, mockCtx)).toThrow(
+      'householdId is missing',
+    );
   });
 
   it('throws BadRequestException when user.householdId is not a number', () => {
@@ -44,7 +52,11 @@ describe('HouseholdId decorator', () => {
       }),
     } as unknown as ExecutionContext;
 
-    expect(() => householdIdFactory(null, mockCtx)).toThrow(BadRequestException);
-    expect(() => householdIdFactory(null, mockCtx)).toThrow('householdId is missing');
+    expect(() => householdIdFactory(null, mockCtx)).toThrow(
+      BadRequestException,
+    );
+    expect(() => householdIdFactory(null, mockCtx)).toThrow(
+      'householdId is missing',
+    );
   });
 });
