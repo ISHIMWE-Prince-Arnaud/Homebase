@@ -2,7 +2,7 @@ services:
   - type: web
     name: homebase-api
     runtime: node
-    plan: starter
+    plan: free
     env: node
     buildCommand: cd backend && npm install && npm run build && npx prisma migrate deploy
     startCommand: cd backend && npm run start:prod
@@ -37,6 +37,6 @@ services:
 
 databases:
   - name: homebase-db
-    plan: starter
+    plan: free
     databaseName: homebase
     user: homebase
