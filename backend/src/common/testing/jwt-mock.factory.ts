@@ -1,5 +1,3 @@
-import { JwtService } from '@nestjs/jwt';
-
 export interface MockJwtService {
   sign: jest.Mock;
   verifyAsync: jest.Mock;

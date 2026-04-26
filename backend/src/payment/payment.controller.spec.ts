@@ -17,6 +17,7 @@ describe('PaymentController', () => {
   };
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     paymentService = {
       createPayment: jest
         .fn()
@@ -39,8 +40,10 @@ describe('PaymentController', () => {
     it('passes householdId + userId + dto to service', async () => {
       const dto = { toUserId: 1, amount: 500 };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.create(10, 2, dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(paymentService.createPayment).toHaveBeenCalledWith(10, 2, dto);
       expect(result).toEqual({
         payment: mockPayment,
@@ -53,6 +56,7 @@ describe('PaymentController', () => {
     it('calls getPayments with householdId', async () => {
       const result = await controller.list(10);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(paymentService.getPayments).toHaveBeenCalledWith(10);
       expect(result).toEqual([mockPayment]);
     });

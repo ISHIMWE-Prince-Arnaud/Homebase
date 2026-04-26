@@ -1,5 +1,3 @@
-import { RealtimeService } from '../../realtime/realtime.service';
-
 export interface MockRealtimeService {
   registerServer: jest.Mock;
   emitToHousehold: jest.Mock;

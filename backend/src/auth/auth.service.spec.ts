@@ -26,6 +26,7 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     prismaMock = createPrismaMock();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     jwtService = { sign: jest.fn().mockReturnValue('test-token') } as any;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -86,8 +87,11 @@ describe('AuthService', () => {
 
       await service.register(registerDto);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const createCall = prismaMock.user.create.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const savedPassword = createCall.data.password;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const isHashed = await bcrypt.compare('secret123', savedPassword);
       expect(isHashed).toBe(true);
     });
@@ -98,7 +102,9 @@ describe('AuthService', () => {
 
       await service.register(registerDto);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const createCall = prismaMock.user.create.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(createCall.data.password).toMatch(/^\$2b\$10\$/);
     });
   });
@@ -160,8 +166,10 @@ describe('AuthService', () => {
         updatedAt: new Date(),
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = service.generateToken(user as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: 5,
         email: 'a@b.com',
@@ -237,8 +245,11 @@ describe('AuthService', () => {
         newPassword: 'newPass123',
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const updateCall = prismaMock.user.update.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(updateCall.data.password).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(updateCall.data.password).not.toBe('newPass123'); // should be hashed
     });
 

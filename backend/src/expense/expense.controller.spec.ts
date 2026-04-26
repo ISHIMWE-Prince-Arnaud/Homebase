@@ -17,6 +17,7 @@ describe('ExpenseController', () => {
   };
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     expenseService = {
       createExpense: jest.fn().mockResolvedValue(mockExpense),
       getExpenses: jest.fn().mockResolvedValue([mockExpense]),
@@ -45,8 +46,10 @@ describe('ExpenseController', () => {
         participants: [{ userId: 1 }, { userId: 2 }],
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.create(10, 1, dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(expenseService.createExpense).toHaveBeenCalledWith(10, 1, dto);
       expect(result).toEqual(mockExpense);
     });
@@ -56,6 +59,7 @@ describe('ExpenseController', () => {
     it('calls getExpenses with householdId', async () => {
       const result = await controller.findAll(10);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(expenseService.getExpenses).toHaveBeenCalledWith(10);
       expect(result).toEqual([mockExpense]);
     });
@@ -65,6 +69,7 @@ describe('ExpenseController', () => {
     it('calls getBalance with householdId', async () => {
       const result = await controller.balance(10);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(expenseService.getBalance).toHaveBeenCalledWith(10);
       expect(result).toEqual([{ userId: 1, net: 50 }]);
     });
@@ -74,6 +79,7 @@ describe('ExpenseController', () => {
     it('calls getSettlements with householdId', async () => {
       const result = await controller.settlements(10);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(expenseService.getSettlements).toHaveBeenCalledWith(10);
       expect(result).toEqual({ settlements: [] });
     });
@@ -83,6 +89,7 @@ describe('ExpenseController', () => {
     it('calls getMySettlements with householdId and userId', async () => {
       const result = await controller.mySettlements(10, 1);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(expenseService.getMySettlements).toHaveBeenCalledWith(10, 1);
       expect(result).toEqual({ settlements: [] });
     });

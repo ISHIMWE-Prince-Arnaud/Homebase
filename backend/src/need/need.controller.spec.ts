@@ -18,6 +18,7 @@ describe('NeedController', () => {
   };
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     needService = {
       createNeed: jest.fn().mockResolvedValue(mockNeed),
       getNeeds: jest.fn().mockResolvedValue([mockNeed]),
@@ -41,8 +42,10 @@ describe('NeedController', () => {
     it('passes householdId + userId + dto to service', async () => {
       const dto = { name: 'Milk', quantity: '2', category: 'Groceries' };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.create(10, 1, dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(needService.createNeed).toHaveBeenCalledWith(10, 1, dto);
       expect(result).toEqual(mockNeed);
     });
@@ -52,6 +55,7 @@ describe('NeedController', () => {
     it('calls getNeeds with householdId', async () => {
       const result = await controller.findAll(10);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(needService.getNeeds).toHaveBeenCalledWith(10);
       expect(result).toEqual([mockNeed]);
     });
@@ -61,8 +65,10 @@ describe('NeedController', () => {
     it('calls markPurchased with parsed id, householdId, userId, and dto', async () => {
       const dto = { createExpense: false };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.purchase(10, 1, '1', dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(needService.markPurchased).toHaveBeenCalledWith(1, 10, 1, dto);
       expect(result).toEqual(mockNeed);
     });
@@ -72,8 +78,10 @@ describe('NeedController', () => {
     it('calls updateNeed with parsed id, householdId, and dto', async () => {
       const dto = { name: 'Updated Milk' };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.update(10, '1', dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(needService.updateNeed).toHaveBeenCalledWith(1, 10, dto);
       expect(result).toEqual(mockNeed);
     });
@@ -83,6 +91,7 @@ describe('NeedController', () => {
     it('calls deleteNeed with parsed id and householdId', async () => {
       const result = await controller.remove(10, '1');
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(needService.deleteNeed).toHaveBeenCalledWith(1, 10);
       expect(result).toEqual(mockNeed);
     });

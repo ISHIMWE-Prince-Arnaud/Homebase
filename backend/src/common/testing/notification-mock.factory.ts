@@ -1,5 +1,3 @@
-import { NotificationService } from '../../notification/notification.service';
-
 export interface MockNotificationService {
   listByHousehold: jest.Mock;
   markRead: jest.Mock;

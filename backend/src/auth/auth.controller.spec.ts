@@ -19,6 +19,7 @@ describe('AuthController', () => {
   };
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     authService = {
       register: jest
         .fn()
@@ -54,7 +55,9 @@ describe('AuthController', () => {
 
       const result = await controller.register(dto, mockRes);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(authService.register).toHaveBeenCalledWith(dto);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'access_token',
         'token',
@@ -79,7 +82,9 @@ describe('AuthController', () => {
 
       const result = await controller.login(dto, mockRes);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(authService.login).toHaveBeenCalledWith(dto);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRes.cookie).toHaveBeenCalledWith(
         'access_token',
         'token',
@@ -99,8 +104,10 @@ describe('AuthController', () => {
     it('calls authService.getProfile with user id from request', async () => {
       const mockReq = { user: { id: 1 } };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.getProfile(mockReq as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(authService.getProfile).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockUser);
     });
@@ -112,6 +119,7 @@ describe('AuthController', () => {
 
       const result = await controller.updateProfile(1, dto);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(authService.updateProfile).toHaveBeenCalledWith(1, dto);
       expect(result).toEqual(mockUser);
     });
@@ -125,6 +133,7 @@ describe('AuthController', () => {
 
       const result = controller.logout(mockRes);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRes.clearCookie).toHaveBeenCalledWith(
         'access_token',
         expect.objectContaining({

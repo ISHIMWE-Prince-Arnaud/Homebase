@@ -58,6 +58,7 @@ describe('NeedService', () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 1, name: 'Alice' });
       notificationMock.create.mockResolvedValue({});
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await service.createNeed(householdId, userId, dto as any);
 
       expect(result).toEqual(createdNeed);
@@ -79,6 +80,7 @@ describe('NeedService', () => {
     });
 
     it('should throw BadRequestException if no householdId', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await expect(service.createNeed(0, userId, dto as any)).rejects.toThrow(
         BadRequestException,
       );
@@ -171,9 +173,11 @@ describe('NeedService', () => {
         id: 1,
         name: 'Milk',
         isPurchased: true,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         purchasedAt: expect.any(Date),
         purchasedById: 1,
       };
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -188,6 +192,7 @@ describe('NeedService', () => {
             findUnique: jest.fn().mockResolvedValue(updatedNeed),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       prismaMock.user.findUnique.mockResolvedValue({ id: 1, name: 'Alice' });
@@ -204,6 +209,7 @@ describe('NeedService', () => {
         id: 1,
         name: 'Milk',
         isPurchased: true,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         purchasedAt: expect.any(Date),
         purchasedById: 1,
       };
@@ -228,6 +234,7 @@ describe('NeedService', () => {
             create: jest.fn().mockResolvedValue({ id: 50 }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       prismaMock.user.findUnique.mockResolvedValue({ id: 1, name: 'Alice' });
@@ -251,6 +258,7 @@ describe('NeedService', () => {
             findUnique: jest.fn().mockResolvedValue({ id: 1, householdId: 99 }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -272,6 +280,7 @@ describe('NeedService', () => {
             findFirst: jest.fn().mockResolvedValue(null),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -294,6 +303,7 @@ describe('NeedService', () => {
             update: jest.fn().mockResolvedValue({ id: 1, isPurchased: true }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -307,6 +317,7 @@ describe('NeedService', () => {
 
     it('should distribute shares evenly (base + remainder) among members', async () => {
       const updatedNeed = { id: 1, name: 'Milk', isPurchased: true };
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -328,6 +339,7 @@ describe('NeedService', () => {
             create: jest.fn().mockResolvedValue({ id: 50 }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       prismaMock.user.findUnique.mockResolvedValue({ id: 1, name: 'Alice' });
@@ -340,6 +352,7 @@ describe('NeedService', () => {
       });
 
       // Verify the expense create call was made
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const txExpenseCreate = prismaMock.$transaction.mock.calls[0][0];
       // The transaction callback creates the expense internally
     });
@@ -352,6 +365,7 @@ describe('NeedService', () => {
         purchasedAt: new Date(),
         purchasedById: 1,
       };
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -373,6 +387,7 @@ describe('NeedService', () => {
             create: jest.fn().mockResolvedValue({ id: 50 }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       prismaMock.user.findUnique.mockResolvedValue({ id: 1, name: 'Alice' });

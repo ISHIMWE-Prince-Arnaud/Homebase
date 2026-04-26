@@ -63,8 +63,10 @@ export function createPrismaMock(): MockPrismaService {
   const mock = {
     $connect: jest.fn(),
     $disconnect: jest.fn(),
+
     $transaction: jest.fn((fn: unknown) => {
       if (typeof fn === 'function') {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
         return fn(mock);
       }
       return Promise.resolve([]);

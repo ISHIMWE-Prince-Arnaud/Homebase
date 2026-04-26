@@ -20,6 +20,7 @@ describe('ChoreController', () => {
   };
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     choreService = {
       getChoresByHousehold: jest.fn().mockResolvedValue([mockChore]),
       createChore: jest.fn().mockResolvedValue(mockChore),
@@ -44,6 +45,7 @@ describe('ChoreController', () => {
     it('uses HouseholdId decorator and calls service', async () => {
       const result = await controller.getAll(10);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(choreService.getChoresByHousehold).toHaveBeenCalledWith(10);
       expect(result).toEqual([mockChore]);
     });
@@ -53,8 +55,10 @@ describe('ChoreController', () => {
     it('uses HouseholdId decorator and calls service with dto', async () => {
       const dto = { title: 'Clean kitchen', dueDate: '2025-12-31' };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.create(10, 1, dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(choreService.createChore).toHaveBeenCalledWith(10, 1, dto);
       expect(result).toEqual(mockChore);
     });
@@ -64,6 +68,7 @@ describe('ChoreController', () => {
     it('calls markComplete with parsed id and householdId', async () => {
       const result = await controller.complete(10, '1');
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(choreService.markComplete).toHaveBeenCalledWith(1, 10);
       expect(result).toEqual(mockChore);
     });
@@ -73,6 +78,7 @@ describe('ChoreController', () => {
     it('calls deleteChore with parsed id and householdId', async () => {
       const result = await controller.remove(10, '1');
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(choreService.deleteChore).toHaveBeenCalledWith(1, 10);
       expect(result).toEqual(mockChore);
     });
@@ -82,6 +88,7 @@ describe('ChoreController', () => {
     it('calls getChoreById with parsed id and householdId', async () => {
       const result = await controller.getOne(10, '1');
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(choreService.getChoreById).toHaveBeenCalledWith(1, 10);
       expect(result).toEqual(mockChore);
     });
@@ -91,8 +98,10 @@ describe('ChoreController', () => {
     it('calls updateChore with parsed id, householdId, and dto', async () => {
       const dto = { title: 'Updated title' };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await controller.update(10, 1, '1', dto as any);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(choreService.updateChore).toHaveBeenCalledWith(1, 10, 1, dto);
       expect(result).toEqual(mockChore);
     });

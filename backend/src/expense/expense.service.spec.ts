@@ -76,8 +76,11 @@ describe('ExpenseService', () => {
       const result = await service.createExpense(householdId, userId, dto);
 
       expect(result.totalAmount).toBe(3000);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const createCall = prismaMock.expense.create.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const shares = createCall.data.participants.create.map(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
         (p: any) => p.shareAmount,
       );
       expect(shares).toEqual([1000, 1000, 1000]);
@@ -227,11 +230,15 @@ describe('ExpenseService', () => {
       const result = await service.getBalance(10);
 
       expect(result).toHaveLength(3);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const alice = result.find((r: any) => r.userId === 1);
       expect(alice).toBeDefined();
+
       expect(alice!.net).toBe(2000); // 3000 paid - 1000 owes
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const bob = result.find((r: any) => r.userId === 2);
       expect(bob).toBeDefined();
+
       expect(bob!.net).toBe(-1000); // 0 paid - 1000 owes
     });
 
@@ -257,11 +264,15 @@ describe('ExpenseService', () => {
 
       const result = await service.getBalance(10);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const alice = result.find((r: any) => r.userId === 1);
       expect(alice).toBeDefined();
+
       expect(alice!.net).toBe(1500); // 3000 paid - 1000 owes - 500 received payment
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const bob = result.find((r: any) => r.userId === 2);
       expect(bob).toBeDefined();
+
       expect(bob!.net).toBe(-500); // 0 paid - 1000 owes + 500 paid
     });
 
@@ -302,13 +313,17 @@ describe('ExpenseService', () => {
 
       expect(result.settlements).toHaveLength(2);
       // Both Bob and Carol should owe Alice 1000
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const fromBob = result.settlements.find((s: any) => s.fromUserId === 2);
       expect(fromBob).toBeDefined();
       expect(fromBob!.amount).toBe(1000);
+
       expect(fromBob!.toUserId).toBe(1);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const fromCarol = result.settlements.find((s: any) => s.fromUserId === 3);
       expect(fromCarol).toBeDefined();
       expect(fromCarol!.amount).toBe(1000);
+
       expect(fromCarol!.toUserId).toBe(1);
     });
 
@@ -334,8 +349,10 @@ describe('ExpenseService', () => {
 
       const result = await service.getSettlements(10);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const fromBob = result.settlements.find((s: any) => s.fromUserId === 2);
       expect(fromBob).toBeDefined();
+
       expect(fromBob!.amount).toBe(500); // 1000 - 500 already paid
     });
 
@@ -371,6 +388,7 @@ describe('ExpenseService', () => {
       // User 2 only appears in settlements with User 1
       expect(result.settlements.length).toBeGreaterThan(0);
       result.settlements.forEach((s: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         expect(s.fromUserId === 2 || s.toUserId === 2).toBe(true);
       });
     });

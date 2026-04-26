@@ -40,6 +40,7 @@ describe('UserId decorator', () => {
   it('throws BadRequestException when user.id is not a number', () => {
     const mockCtx = {
       switchToHttp: () => ({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         getRequest: () => ({ user: { id: '123' as any } }),
       }),
     } as unknown as ExecutionContext;

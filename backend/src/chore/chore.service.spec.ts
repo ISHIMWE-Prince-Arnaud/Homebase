@@ -267,7 +267,9 @@ describe('ChoreService', () => {
 
       await service.updateChore(1, 10, 1, { assignedToId: null });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const updateCall = prismaMock.chore.update.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(updateCall.data.assignedTo).toEqual({ disconnect: true });
     });
 

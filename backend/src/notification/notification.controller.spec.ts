@@ -18,6 +18,7 @@ describe('NotificationController', () => {
   };
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     notificationService = {
       listByHousehold: jest.fn().mockResolvedValue([mockNotification]),
       markRead: jest.fn().mockResolvedValue(mockNotification),
@@ -41,6 +42,7 @@ describe('NotificationController', () => {
     it('passes householdId and userId to service', async () => {
       const result = await controller.list(10, 1);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(notificationService.listByHousehold).toHaveBeenCalledWith(10, 1);
       expect(result).toEqual([mockNotification]);
     });
@@ -50,6 +52,7 @@ describe('NotificationController', () => {
     it('calls markRead with householdId, parsed id, and userId', async () => {
       const result = await controller.markRead(10, '1', 1);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(notificationService.markRead).toHaveBeenCalledWith(10, 1, 1);
       expect(result).toEqual(mockNotification);
     });
@@ -59,6 +62,7 @@ describe('NotificationController', () => {
     it('calls markAllRead with householdId and userId', async () => {
       await controller.markAll(10, 1);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(notificationService.markAllRead).toHaveBeenCalledWith(10, 1);
     });
   });

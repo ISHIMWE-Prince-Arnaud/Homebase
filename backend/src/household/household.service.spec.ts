@@ -65,8 +65,11 @@ describe('HouseholdService', () => {
       const result = await service.createHousehold(userId, dto);
 
       expect(result).toEqual(household);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const createCall = prismaMock.household.create.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(createCall.data.name).toBe('Test Home');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(createCall.data.users.connect).toEqual({ id: userId });
     });
 
@@ -97,7 +100,9 @@ describe('HouseholdService', () => {
 
       await service.createHousehold(userId, dto);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const createCall = prismaMock.household.create.mock.calls[0][0];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(createCall.data.inviteCode).toMatch(/^[A-Z0-9]{8}$/);
       expect(realtimeMock.syncUserHousehold).toHaveBeenCalledWith(
         userId,
@@ -130,6 +135,7 @@ describe('HouseholdService', () => {
         householdId: null,
       });
       // $transaction callback receives the mock itself
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -139,6 +145,7 @@ describe('HouseholdService', () => {
             update: jest.fn().mockResolvedValue({}),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       prismaMock.household.findUnique.mockResolvedValue(household);
@@ -162,11 +169,13 @@ describe('HouseholdService', () => {
         id: 2,
         householdId: null,
       });
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
           household: { findUnique: jest.fn().mockResolvedValue(null) },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -177,6 +186,7 @@ describe('HouseholdService', () => {
 
     it('should throw BadRequestException if user already in a household', async () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 2, householdId: 99 });
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
@@ -188,6 +198,7 @@ describe('HouseholdService', () => {
           },
           user: { update: jest.fn().mockResolvedValue({}) },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -201,12 +212,14 @@ describe('HouseholdService', () => {
         id: 2,
         householdId: null,
       });
+
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         const tx = {
           ...prismaMock,
           household: { findUnique: jest.fn().mockResolvedValue(household) },
           user: { update: jest.fn().mockResolvedValue({}) },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       realtimeMock.syncUserHousehold.mockResolvedValue(undefined);
@@ -320,6 +333,7 @@ describe('HouseholdService', () => {
             updateMany: jest.fn().mockResolvedValue({ count: 1 }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       realtimeMock.syncUserHousehold.mockResolvedValue(undefined);
@@ -347,6 +361,7 @@ describe('HouseholdService', () => {
             findUnique: jest.fn().mockResolvedValue(null),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -366,6 +381,7 @@ describe('HouseholdService', () => {
               .mockResolvedValue({ id: 1, householdId: null }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -404,6 +420,7 @@ describe('HouseholdService', () => {
               .mockResolvedValueOnce({ _sum: { amount: 0 } }),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
 
@@ -462,6 +479,7 @@ describe('HouseholdService', () => {
             delete: jest.fn().mockResolvedValue({}),
           },
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return await fn(tx);
       });
       realtimeMock.syncUserHousehold.mockResolvedValue(undefined);

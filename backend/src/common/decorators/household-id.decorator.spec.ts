@@ -48,6 +48,7 @@ describe('HouseholdId decorator', () => {
   it('throws BadRequestException when user.householdId is not a number', () => {
     const mockCtx = {
       switchToHttp: () => ({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         getRequest: () => ({ user: { householdId: '10' as any } }),
       }),
     } as unknown as ExecutionContext;
