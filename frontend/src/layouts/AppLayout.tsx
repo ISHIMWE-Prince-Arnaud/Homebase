@@ -5,7 +5,7 @@ import { BottomNav } from "@/components/layout/BottomNav";
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen w-full md:grid md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="min-h-screen w-full md:grid md:grid-cols-[260px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar className="hidden md:block" />
       <div className="flex flex-col">
         <Topbar />

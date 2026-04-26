@@ -50,7 +50,7 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <div
       className={cn(
-        "hidden border-r bg-background md:flex md:flex-col md:h-screen md:sticky md:top-0 md:w-[280px]",
+        "hidden border-r bg-background md:flex md:flex-col md:h-screen md:sticky md:top-0 md:w-[260px] lg:w-[280px]",
         className
       )}>
       <div className="space-y-4 py-4">
