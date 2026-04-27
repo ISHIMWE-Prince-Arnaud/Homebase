@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "@/pages/Login";
 import RegisterPage from "@/pages/Register";
 import PublicLayout from "@/layouts/PublicLayout";
@@ -12,6 +12,7 @@ import PaymentsPage from "@/pages/Payments";
 import HouseholdPage from "@/pages/Household";
 import NotificationsPage from "@/pages/Notifications";
 import DashboardPage from "@/pages/Dashboard";
+import NotFoundPage from "@/pages/NotFound";
 
 function App() {
   return (
@@ -40,8 +41,8 @@ function App() {
         </Route>
       </Route>
 
-      {/* Default Redirect */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      {/* 404 Not Found */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
