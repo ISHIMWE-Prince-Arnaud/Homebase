@@ -2,84 +2,216 @@
 
 A full‑stack app to manage shared household life: authentication, households, chores, needs (shopping list), expenses, payments/settlements, notifications, and realtime updates.
 
-- Backend: NestJS 11 + Prisma (PostgreSQL) + Socket.IO
-- Frontend: React 19 + Vite 7 + React Router 7 + TanStack Query 5 + TailwindCSS + Zustand + Socket.IO Client
+- **Backend**: NestJS 11 + Prisma 6 + PostgreSQL + JWT (httpOnly cookies) + Socket.IO
+- **Frontend**: React 19 + Vite 7 + TanStack Query 5 + Zustand + React Router 7 + TailwindCSS + shadcn/ui + Socket.IO Client
 
 ## Monorepo Structure
 
-- backend/ — NestJS API, Prisma schema and migrations, module docs
-- frontend/ — React SPA, feature folders, UI components, frontend docs
+```
+Homebase/
+├── backend/          # NestJS API
+│   ├── src/          # Application code
+│   ├── prisma/       # Schema & migrations
+│   ├── scripts/      # Utility scripts (JWT generation)
+│   ├── .env.example  # Environment template
+│   └── package.json
+├── frontend/         # React SPA
+│   ├── src/          # Application code
+│   ├── .env.example  # Environment template
+│   └── package.json
+└── render.yaml       # Render.com deployment blueprint
+```
+
+## Prerequisites
+
+- **Node.js** 20+ (check with `node --version`)
+- **npm** 10+ (check with `npm --version`)
+- **PostgreSQL** 14+ (local installation or Docker)
+- **Git**
 
 ## Quick Start (Local Development)
 
-Prerequisites:
-
-- Node.js 20+
-- npm 10+
-- Docker (for local Postgres)
-
-1. Start the database
-
-- From `backend/` run:
+### 1. Clone & Navigate
 
 ```bash
-docker compose up -d db
+git clone <your-repo-url>
+cd Homebase
 ```
 
-2. Configure environment
+### 2. Database Setup
 
-- Backend: copy `backend/.env` and adjust as needed (see `backend/README.md`).
-- Frontend: `frontend/.env` contains `VITE_API_URL` (defaults to `http://localhost:3000`).
+Option A - Using local PostgreSQL:
+```bash
+# Create database
+createdb homebasedb
+```
 
-3. Install dependencies
+Option B - Using Docker:
+```bash
+docker run -d \
+  --name homebase-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=yourpassword \
+  -e POSTGRES_DB=homebasedb \
+  -p 5432:5432 \
+  postgres:15-alpine
+```
 
-- In `backend/` and `frontend/` run:
+### 3. Backend Setup
 
 ```bash
+cd backend
+
+# Install dependencies
 npm install
-```
 
-4. Prepare the backend
+# Configure environment
+cp .env.example .env
+# Edit .env and set your DATABASE_URL and JWT_SECRET
 
-```bash
-# In backend/
-# Generate Prisma Client (runs on postinstall as well)
+# Generate JWT secret (optional - for random secret)
+node scripts/jwt-secret.js
+
+# Generate Prisma client and run migrations
 npx prisma generate
-# Apply migrations (creates schema in the Postgres container)
 npx prisma migrate dev
-# Start API with hot reload
+
+# (Optional) Seed the database with sample data
+npx prisma db seed
+
+# Start development server
 npm run start:dev
 ```
 
-API default: http://localhost:3000
+Backend runs at `http://localhost:3000` (or your configured PORT)
 
-5. Run the frontend
+### 4. Frontend Setup
 
 ```bash
-# In frontend/
+cd frontend
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env if your backend runs on a different port
+
+# Start development server
 npm run dev
 ```
 
-App default: http://localhost:5173
+Frontend runs at `http://localhost:5173`
+
+### 5. Verify Setup
+
+- Open `http://localhost:5173` in your browser
+- Register a new account or login with seeded users:
+  - Email: `alice@example.com` | Password: `password123`
+  - Email: `bob@example.com` | Password: `password123`
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `DATABASE_URL` | Yes | - | PostgreSQL connection string |
+| `JWT_SECRET` | Yes | - | Min 32 chars. Generate with `node scripts/jwt-secret.js` |
+| `JWT_EXPIRATION` | No | 604800 | JWT expiry in seconds (7 days) |
+| `PORT` | No | 3000 | API server port |
+| `NODE_ENV` | No | development | `production` enables secure cookies |
+| `FRONTEND_URL` | No | http://localhost:5173 | CORS allowed origin |
+| `THROTTLE_TTL_SHORT` | No | 60000 | Rate limit window (ms) for auth endpoints |
+| `THROTTLE_LIMIT_SHORT` | No | 10 | Requests per window for auth |
+| `THROTTLE_TTL_MEDIUM` | No | 900000 | Rate limit window (ms) for general API |
+| `THROTTLE_LIMIT_MEDIUM` | No | 100 | Requests per window for API |
+| `THROTTLE_TTL_LONG` | No | 3600000 | Global rate limit window (ms) |
+| `THROTTLE_LIMIT_LONG` | No | 300 | Global requests per hour |
+
+### Frontend (`frontend/.env`)
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `VITE_API_URL` | No | http://localhost:3000 | Backend API base URL |
+
+## Available Scripts
+
+### Backend
+
+```bash
+npm run start:dev      # Development with hot reload
+npm run build          # Production build
+npm run start:prod     # Run production build
+npm run test           # Run tests
+npm run test:watch     # Tests in watch mode
+npm run lint           # ESLint
+
+# Prisma
+npx prisma migrate dev     # Create/run migrations
+npx prisma migrate deploy  # Deploy migrations (production)
+npx prisma db seed         # Run seed script
+npx prisma studio          # Open Prisma Studio GUI
+```
+
+### Frontend
+
+```bash
+npm run dev            # Start dev server
+npm run build          # Production build
+npm run preview        # Preview production build
+npm run test           # Run Vitest tests
+npm run test:watch     # Tests in watch mode
+npm run lint           # ESLint
+```
+
+## Architecture Highlights
+
+- **Authentication**: JWT tokens in httpOnly cookies, extracted from cookies via custom Passport strategy
+- **Authorization**: `@UseGuards(JwtGuard)` on protected endpoints
+- **Database**: Prisma ORM with PostgreSQL, connection via `DATABASE_URL`
+- **Rate Limiting**: Tiered throttling (strict for auth, medium for profile updates, standard for API)
+- **Security**: Helmet headers, CORS configured via `FRONTEND_URL`, secure cookies in production
+- **Realtime**: Socket.IO with cookie-based auth, targeted query invalidation via React Query
+- **State Management**: TanStack Query for server state, Zustand for UI state (sidebar, theme)
+
+## Deployment
+
+### Backend (Render.com)
+
+See `render.yaml` for blueprint deployment:
+
+1. Push to GitHub
+2. In Render dashboard: **New +** → **Blueprint**
+3. Connect your repository
+4. Render auto-creates PostgreSQL database and web service
+
+### Frontend (Vercel)
+
+```bash
+cd frontend
+npm run build
+```
+
+Deploy the `dist/` folder to Vercel with environment variable:
+- `VITE_API_URL=https://your-api-domain.com`
 
 ## Documentation
 
-- Backend overview and module docs: [backend/README.md](backend/README.md) · [backend/docs/](backend/docs/)
-- Frontend overview: [frontend/README.md](frontend/README.md)
-- Frontend feature docs (APIs, usage, routes): [frontend/docs/](frontend/docs/)
+- Backend module docs: [backend/docs/](backend/docs/)
+- Frontend feature docs: [frontend/docs/](frontend/docs/)
 
-## Scripts
+## Troubleshooting
 
-- Backend: see `backend/package.json` (start, build, test, lint, prisma)
-- Frontend: see `frontend/package.json` (dev, build, preview, lint)
+**Database connection errors**: Verify `DATABASE_URL` format: `postgresql://USER:PASSWORD@HOST:PORT/DBNAME`
 
-## Tech Highlights
+**JWT errors**: Ensure `JWT_SECRET` is set and at least 32 characters
 
-- Auth: JWT; API uses HTTP JSON; WebSocket handshake uses credentials
-- Data: Prisma ORM over PostgreSQL
-- State & Data Fetching: TanStack Query (caching, mutations) + Zustand (UI state)
-- Realtime: Socket.IO with targeted query invalidations
-- Styling: TailwindCSS and utility-driven components
+**CORS errors**: Check `FRONTEND_URL` matches your actual frontend URL exactly
+
+**Prisma client errors**: Run `npx prisma generate` after schema changes
+
+**Port conflicts**: Change `PORT` in backend `.env` and update frontend `VITE_API_URL` accordingly
 
 ## License
 
