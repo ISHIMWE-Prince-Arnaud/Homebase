@@ -1,110 +1,122 @@
 # Homebase Frontend
 
-React SPA for managing shared household life. It talks to the NestJS backend and uses realtime updates.
+React SPA for the Homebase household management application.
 
-## Tech Stack
+## Quick Start
 
-- React 19 + Vite 7
-- React Router 7
-- TanStack Query 5
-- TailwindCSS
-- Zustand (UI state)
-- Axios + Socket.IO Client
-
-## Local Development
-
-1. Environment
-
-- Create or edit `./.env`
-
-```
-VITE_API_URL=http://localhost:3000
-```
-
-2. Install deps
-
-```
+```bash
+# 1. Install dependencies
 npm install
-```
 
-3. Run dev server
+# 2. Configure environment
+cp .env.example .env
+# Edit .env: Set VITE_API_URL to your backend URL (default: http://localhost:3000)
 
-```
+# 3. Start development server
 npm run dev
 ```
 
-App default: http://localhost:5173
+The app will be available at `http://localhost:5173`.
 
-## Scripts
+## Documentation
 
-- `npm run dev` — Start dev server
-- `npm run build` — Type-check and build
-- `npm run preview` — Preview production build
-- `npm run lint` — Lint source
+This README provides a quick overview. For complete documentation, see:
+
+### [📚 Full Frontend Documentation](../docs/frontend/README.md)
+
+Comprehensive documentation including:
+- **Project Structure** - Directory organization and conventions
+- **Routing** - Route configuration and guards
+- **State Management** - TanStack Query and Zustand patterns
+- **Features** - All feature modules (auth, chores, expenses, etc.)
+- **API Integration** - Axios client and React Query hooks
+- **Real-time Updates** - WebSocket integration
+- **Component Library** - UI components and design system
+
+### Key Docs
+
+| Document | Description |
+|----------|-------------|
+| [Project Structure](../docs/frontend/README.md#project-structure) | Directory organization |
+| [Routing](../docs/frontend/README.md#routing) | Routes and navigation guards |
+| [State Management](../docs/frontend/README.md#state-management) | TanStack Query & Zustand |
+| [Features](../docs/frontend/README.md#features) | Feature modules overview |
+| [Architecture Overview](../docs/architecture.md) | System design and data flow |
+
+## Environment Variables
+
+Required in `.env`:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+See `.env.example` for all options.
+
+## Available Scripts
+
+```bash
+npm run dev            # Start dev server (port 5173)
+npm run build          # Production build
+npm run preview        # Preview production build
+npm run test           # Run Vitest tests
+npm run test:watch     # Tests in watch mode
+npm run lint           # ESLint check
+```
 
 ## Project Structure
 
-- `src/App.tsx` — Routes
-- `src/main.tsx` — Providers: QueryClient, ThemeProvider, Router, Realtime, Toaster
-- `src/api/` — Axios client
-- `src/features/` — Feature folders (auth, household, chores, needs, expenses, payments, notifications, realtime)
-- `src/hooks/` — App hooks (auth, household, etc.)
-- `src/layouts/` — Layouts (public, app)
-- `src/components/` — UI & layout components
-- `src/stores/` — Zustand store(s)
-- `src/lib/` — Utilities (display, toast, utils)
+```
+src/
+├── api/               # Axios client & API hooks
+├── components/        # Reusable UI components
+│   ├── ui/            # shadcn/ui components
+│   └── layout/        # Layout components
+├── features/          # Feature modules
+│   ├── auth/
+│   ├── chores/
+│   ├── expenses/
+│   ├── household/
+│   ├── needs/
+│   ├── notifications/
+│   ├── payments/
+│   └── realtime/
+├── hooks/             # Custom React hooks
+├── layouts/           # Page layouts
+├── lib/               # Utilities
+├── pages/             # Route pages
+└── stores/            # Zustand stores
+```
 
 ## Routing
 
-- Public
-  - `/login`
-  - `/register`
-- Protected (requires auth)
-  - `/household` — Manage/create/join household (accessible to any authenticated user)
-  - `/profile`
-  - Requires existing household
-    - `/dashboard`
-    - `/chores`
-    - `/needs`
-    - `/expenses`
-    - `/payments`
-    - `/notifications`
-- Fallback: any `*` redirects to `/dashboard`
+- **Public**: `/login`, `/register`
+- **Protected** (requires auth): `/household`, `/dashboard`, `/chores`, `/expenses`, `/needs`, `/payments`, `/notifications`
 
 Guards:
+- `ProtectedRoute` — Redirects unauthenticated to `/login`
+- `HouseholdRequiredRoute` — Redirects without household to `/household`
 
-- `ProtectedRoute` — Redirects unauthenticated users to `/login`
-- `HouseholdRequiredRoute` — Redirects users without a household to `/household`
+## Tech Stack
 
-## Data & State
+- **Framework**: React 19 + Vite 7
+- **Routing**: React Router 7
+- **Server State**: TanStack Query 5
+- **Client State**: Zustand
+- **Styling**: TailwindCSS + shadcn/ui
+- **Forms**: React Hook Form + Zod
+- **API**: Axios + Socket.IO
+- **Testing**: Vitest
 
-- TanStack Query for server state (caching, mutations). See `src/main.tsx` default options.
-- Zustand for UI state: `src/stores/uiStore.ts` (sidebar, theme, notification panel). Theme persisted (`ui-storage`).
+## Deployment
 
-## API Client
+Build for production:
+```bash
+npm run build
+```
 
-- `src/api/client.ts` creates an Axios instance using `VITE_API_URL`.
-- `withCredentials: true` so the browser sends the HttpOnly `access_token` cookie.
-- Global response interceptor warns on 401.
+Deploy the `dist/` folder to Vercel, Netlify, or any static host.
 
-## Realtime
+---
 
-- `src/features/realtime/RealtimeProvider.tsx` opens a Socket.IO connection to `VITE_API_URL`.
-- Events are mapped in `src/features/realtime/events.ts` to invalidate specific React Query keys.
-
-## Frontend Docs
-
-Docs Index:
-
-- ./docs/README.md — Overview
-- ./docs/routing.md — Routing
-- ./docs/api-client.md — API Client
-- ./docs/state.md — State & Data
-- ./docs/realtime.md — Realtime
-- ./docs/auth.md — Auth
-- ./docs/household.md — Household
-- ./docs/chores.md — Chores
-- ./docs/needs.md — Needs
-- ./docs/expenses.md — Expenses
-- ./docs/payments.md — Payments
-- ./docs/notifications.md — Notifications
+**[📖 View Full Documentation](../docs/frontend/README.md)**
