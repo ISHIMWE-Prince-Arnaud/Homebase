@@ -1,4 +1,4 @@
-# HomeBase Frontend
+# Homebase Frontend
 
 React SPA for managing shared household life. It talks to the NestJS backend and uses realtime updates.
 

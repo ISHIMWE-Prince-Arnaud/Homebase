@@ -1,6 +1,6 @@
 # Frontend Documentation
 
-This folder documents the HomeBase frontend features and the API endpoints they consume.
+This folder documents the Homebase frontend features and the API endpoints they consume.
 
 - Start here if you want an overview of routing, data, and realtime.
 - Each feature doc lists the endpoints used and key UI/UX flows.

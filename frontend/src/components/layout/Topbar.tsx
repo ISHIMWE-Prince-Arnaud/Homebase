@@ -37,9 +37,9 @@ export function Topbar() {
       <header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
         {/* Mobile Branding */}
         <div className="flex items-center md:hidden">
-          <img src="/logo.svg" alt="HomeBase Logo" className="h-6 w-6 mr-2" />
+          <img src="/logo.svg" alt="Homebase Logo" className="h-6 w-6 mr-2" />
           <h2 className="text-xl font-bold tracking-tight text-primary">
-            HomeBase
+            Homebase
           </h2>
         </div>
 

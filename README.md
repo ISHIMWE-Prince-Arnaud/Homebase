@@ -1,4 +1,4 @@
-# HomeBase
+# Homebase
 
 A full‑stack app to manage shared household life: authentication, households, chores, needs (shopping list), expenses, payments/settlements, notifications, and realtime updates.
 

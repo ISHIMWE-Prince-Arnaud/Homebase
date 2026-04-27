@@ -1,4 +1,4 @@
-# HomeBase Backend
+# Homebase Backend
 
 A NestJS (v11) API for managing shared household life: authentication, households, chores, expenses, needs, notifications, payments, and realtime updates.
 

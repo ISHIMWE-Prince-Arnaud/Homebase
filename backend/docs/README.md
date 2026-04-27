@@ -1,6 +1,6 @@
 # Backend Documentation
 
-This folder contains module-focused documentation for the HomeBase backend. Each module README provides an overview, key models, common endpoints, and notes.
+This folder contains module-focused documentation for the Homebase backend. Each module README provides an overview, key models, common endpoints, and notes.
 
 ## Conventions
 

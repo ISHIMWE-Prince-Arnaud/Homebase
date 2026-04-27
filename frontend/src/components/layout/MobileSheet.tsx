@@ -30,11 +30,11 @@ export function MobileSheet({ open, onOpenChange, onLogoutClick }: MobileSheetPr
         </SheetHeader>
         
         <div className="mt-6 flex flex-col space-y-4">
-          {/* HomeBase Logo */}
+          {/* Homebase Logo */}
           <div className="flex items-center px-4 mb-4">
-            <img src="/logo.svg" alt="HomeBase Logo" className="h-7 w-7 mr-2" />
+            <img src="/logo.svg" alt="Homebase Logo" className="h-7 w-7 mr-2" />
             <h2 className="text-2xl font-bold tracking-tight text-primary">
-              HomeBase
+              Homebase
             </h2>
           </div>
 

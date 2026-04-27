@@ -56,9 +56,9 @@ export function Sidebar({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mb-6 flex items-center px-4">
-            <img src="/logo.svg" alt="HomeBase Logo" className="h-7 w-7" />
+            <img src="/logo.svg" alt="Homebase Logo" className="h-7 w-7" />
             <h2 className="ml-2 text-2xl font-bold tracking-tight text-primary">
-              HomeBase
+              Homebase
             </h2>
           </div>
           <div className="space-y-1">

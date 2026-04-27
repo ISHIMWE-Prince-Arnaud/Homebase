@@ -1,6 +1,6 @@
 # Backend Deployment Guide - Render.com
 
-This guide explains how to deploy the HomeBase backend API to Render.com.
+This guide explains how to deploy the Homebase backend API to Render.com.
 
 ## Prerequisites
 

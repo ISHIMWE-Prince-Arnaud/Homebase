@@ -57,7 +57,7 @@ export default function RegisterPage() {
               Create an account
             </h1>
             <p className="text-muted-foreground text-sm">
-              Join HomeBase and manage your household effortlessly.
+              Join Homebase and manage your household effortlessly.
             </p>
           </div>
 

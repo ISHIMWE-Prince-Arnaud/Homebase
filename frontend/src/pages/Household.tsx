@@ -39,7 +39,7 @@ export default function HouseholdPage() {
     <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-8">
       <FadeIn className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-primary">
-          Welcome to HomeBase
+          Welcome to Homebase
         </h1>
         <p className="mt-2 text-muted-foreground">
           To get started, create a new household or join an existing one.

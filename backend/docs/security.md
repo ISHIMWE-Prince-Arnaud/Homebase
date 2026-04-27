@@ -1,6 +1,6 @@
 # Security Documentation
 
-This document outlines the security measures implemented in the HomeBase backend application.
+This document outlines the security measures implemented in the Homebase backend application.
 
 ## Rate Limiting Policies
 

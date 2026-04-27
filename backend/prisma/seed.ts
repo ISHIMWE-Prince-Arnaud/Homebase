@@ -441,7 +441,7 @@ async function main() {
         userId: null, // household-wide
       },
       {
-        message: 'Welcome to HomeBase!',
+        message: 'Welcome to Homebase!',
         type: 'system',
         isRead: true,
         householdId: household.id,
