@@ -1,0 +1,68 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend: Debug",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "start:debug"
+      ],
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "preLaunchTask": "npm: install - backend"
+    },
+    {
+      "name": "Backend: Test (Current File)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test",
+        "--",
+        "${relativeFile}",
+        "--inspect-brk"
+      ],
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Frontend: Debug",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      },
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/frontend/node_modules/**"
+      ]
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: Debug",
+      "configurations": [
+        "Backend: Debug",
+        "Frontend: Debug"
+      ],
+      "stopAll": true
+    }
+  ]
+}

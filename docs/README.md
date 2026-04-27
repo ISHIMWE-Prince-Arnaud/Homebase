@@ -135,7 +135,7 @@ Homebase is a full-stack household management application built with:
 | React | 19.x | UI library |
 | Vite | 7.x | Build tool |
 | TypeScript | 5.x | Type safety |
-| TailwindCSS | 4.x | Styling |
+| TailwindCSS | 3.x | Styling |
 | shadcn/ui | latest | UI components |
 | TanStack Query | 5.x | Server state |
 | Zustand | 4.x | Client state |

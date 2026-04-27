@@ -196,10 +196,34 @@ npm run build
 Deploy the `dist/` folder to Vercel with environment variable:
 - `VITE_API_URL=https://your-api-domain.com`
 
-## Documentation
+## Documentation Roadmap
 
-- Backend module docs: [backend/docs/](backend/docs/)
-- Frontend feature docs: [frontend/docs/](frontend/docs/)
+Our comprehensive documentation covers everything from quick start to deep architectural details:
+
+### Quick Start
+- **[SETUP.md](SETUP.md)** - Local development environment setup
+- **[Root README](README.md)** - You are here! Project overview
+
+### Architecture & Design
+- **[docs/architecture.md](docs/architecture.md)** - System architecture, data flow, ADRs, deployment
+- **[docs/contributing.md](docs/contributing.md)** - Contribution guidelines, code standards, workflow
+
+### Backend Documentation
+- **[docs/backend/README.md](docs/backend/README.md)** - Complete API reference, endpoints, examples
+- **[docs/backend/database.md](docs/backend/database.md)** - Database schema, Prisma models, migrations
+- **[docs/backend/websocket.md](docs/backend/websocket.md)** - WebSocket events, Socket.IO implementation
+- **[docs/backend/errors.md](docs/backend/errors.md)** - Error codes, handling patterns, troubleshooting
+- **[docs/backend/testing.md](docs/backend/testing.md)** - Backend testing guide with Jest
+
+### Frontend Documentation
+- **[docs/frontend/README.md](docs/frontend/README.md)** - Frontend architecture, routing, state management
+- **[docs/frontend/api-patterns.md](docs/frontend/api-patterns.md)** - API integration patterns with React Query
+- **[docs/frontend/testing.md](docs/frontend/testing.md)** - Component testing with Vitest and RTL
+- **[docs/frontend/components.md](docs/frontend/components.md)** - Component design system, shadcn/ui usage
+- **[docs/frontend/performance.md](docs/frontend/performance.md)** - Performance optimization guide
+
+### Documentation Hub
+📚 **Start here**: [docs/README.md](docs/README.md) - Documentation index with quick navigation
 
 ## Troubleshooting
 
@@ -213,6 +237,26 @@ Deploy the `dist/` folder to Vercel with environment variable:
 
 **Port conflicts**: Change `PORT` in backend `.env` and update frontend `VITE_API_URL` accordingly
 
+## Known Limitations
+
+- **File Uploads**: Not currently supported (planned for future releases)
+- **Mobile App**: Web-only, no native iOS/Android apps yet
+- **Multi-Household**: Users can only belong to one household at a time
+- **Currency**: Currently supports RWF (Rwandan Francs) only
+- **Offline Mode**: Requires internet connection for all operations
+- **Notifications**: No email/push notifications, only in-app
+
+See [docs/architecture.md](docs/architecture.md#scalability-considerations) for planned improvements.
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](docs/contributing.md) to get started.
+
+Quick links:
+- [Development Setup](SETUP.md)
+- [Code Standards](docs/contributing.md#code-standards)
+- [Testing Requirements](docs/contributing.md#testing-requirements)
+
 ## License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

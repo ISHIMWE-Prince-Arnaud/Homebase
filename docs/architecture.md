@@ -124,7 +124,7 @@ Homebase is a full-stack web application designed for shared household managemen
 | Framework | React 19 | UI library |
 | Build Tool | Vite 7 | Fast dev server & bundler |
 | Language | TypeScript 5 | Type-safe development |
-| Styling | TailwindCSS 4 | Utility-first CSS |
+| Styling | TailwindCSS 3 | Utility-first CSS |
 | Components | shadcn/ui | Accessible component primitives |
 | State (Server) | TanStack Query 5 | Server state management |
 | State (Client) | Zustand | UI state management |
@@ -419,6 +419,147 @@ Local Development                    Production
                  │  localhost  │
                  │   :5432     │
                  └─────────────┘
+```
+
+---
+
+## Architecture Decision Records (ADRs)
+
+Key architectural decisions and their rationales.
+
+### ADR-001: httpOnly Cookies over localStorage for JWT Storage
+
+**Context:** Need to store JWT tokens securely to prevent XSS attacks.
+
+**Decision:** Store JWT in httpOnly, Secure, SameSite cookies instead of localStorage.
+
+**Consequences:**
+- **Positive:** XSS protection (JavaScript cannot access token), automatic inclusion in requests
+- **Negative:** Increased complexity for mobile app implementation, requires CSRF protection considerations
+
+**Status:** Accepted
+
+### ADR-002: Socket.IO over Server-Sent Events
+
+**Context:** Need real-time bidirectional communication for household updates.
+
+**Decision:** Use Socket.IO with WebSocket transport and automatic fallbacks.
+
+**Consequences:**
+- **Positive:** Reliable real-time updates, built-in reconnection, room support for household isolation
+- **Negative:** Larger bundle size, additional server complexity
+
+**Status:** Accepted
+
+### ADR-003: Prisma ORM over TypeORM/Sequelize
+
+**Context:** Need type-safe database access with migration support.
+
+**Decision:** Use Prisma with its schema-first approach and auto-generated client.
+
+**Consequences:**
+- **Positive:** Excellent TypeScript support, automatic migration generation, query optimization
+- **Negative:** Learning curve for Prisma-specific syntax, less flexibility than query builders
+
+**Status:** Accepted
+
+### ADR-004: TanStack Query over Redux for Server State
+
+**Context:** Need to manage server state with caching, synchronization, and background updates.
+
+**Decision:** Use TanStack Query (React Query) for server state, Zustand for client/UI state only.
+
+**Consequences:**
+- **Positive:** Automatic caching, background refetching, optimistic updates, less boilerplate
+- **Negative:** Learning curve for query keys and invalidation patterns
+
+**Status:** Accepted
+
+### ADR-005: Greedy Settlement Algorithm for Expense Balances
+
+**Context:** Need to minimize number of transactions required to settle household expenses.
+
+**Decision:** Use greedy pairing algorithm where highest creditor matches with highest debtor iteratively.
+
+**Consequences:**
+- **Positive:** Mathematically minimal number of transactions, fair settlement
+- **Negative:** May feel unintuitive (users might prefer paying original creditors)
+
+**Status:** Accepted
+
+### ADR-006: Feature-Based Folder Structure
+
+**Context:** Need scalable organization for growing codebase.
+
+**Decision:** Organize by feature (auth/, chores/, expenses/) rather than by type (components/, hooks/, utils/).
+
+**Consequences:**
+- **Positive:** Clear ownership, easy to locate related code, scalable team development
+- **Negative:** Some code duplication across features, utilities need shared location
+
+**Status:** Accepted
+
+---
+
+## Notification System Data Flow
+
+Visual representation of how notifications propagate through the system.
+
+```
+┌─────────────────┐
+│  User Action    │
+│ (Create Expense)│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────┐
+│   ExpenseService    │
+│   - Validate input   │
+│   - Create expense   │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ NotificationService │
+│   - Determine      │
+│     recipients     │
+│   - Build message  │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│  Prisma: Create     │
+│  Notification Row   │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│  RealtimeService    │
+│   - Emit to         │
+│     household       │
+│     room            │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐     ┌─────────────────────┐
+│   WebSocket:        │────►│  Frontend Clients   │
+│   notifications:new │     │  (All household     │
+│                     │     │   members)          │
+└─────────────────────┘     └──────────┬──────────┘
+                                       │
+                                       ▼
+                           ┌─────────────────────┐
+                           │ React Query:        │
+                           │ invalidateQueries   │
+                           │ (['notifications']) │
+                           └──────────┬──────────┘
+                                      │
+                                      ▼
+                           ┌─────────────────────┐
+                           │ UI: Notification    │
+                           │ Badge Updates       │
+                           │ Toast Display       │
+                           └─────────────────────┘
 ```
 
 ---
