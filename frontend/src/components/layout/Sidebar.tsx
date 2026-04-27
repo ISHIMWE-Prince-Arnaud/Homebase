@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "../../../src/lib/utils";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/components/layout/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -22,6 +23,12 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 export function Sidebar({ className }: SidebarProps) {
   const location = useLocation();
   const { logout } = useAuth();
+  const { theme } = useTheme();
+
+  const isDark = theme === "system"
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : theme === "dark";
+  const logoSrc = isDark ? "/logo-dark.png" : "/logo-light.png";
 
   const NavItem = ({ item }: { item: typeof primaryNav[number] }) => {
     const isActive = location.pathname === item.href;
@@ -56,7 +63,7 @@ export function Sidebar({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mb-6 flex items-center px-4">
-            <img src="/logo.svg" alt="Homebase Logo" className="h-7 w-7" />
+            <img src={logoSrc} alt="Homebase Logo" className="h-7 w-7" />
             <h2 className="ml-2 text-2xl font-bold tracking-tight text-primary">
               Homebase
             </h2>

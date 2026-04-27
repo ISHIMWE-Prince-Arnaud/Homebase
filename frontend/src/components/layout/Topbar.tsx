@@ -24,11 +24,18 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "react-router-dom";
+import { useTheme } from "@/components/layout/ThemeProvider";
 
 export function Topbar() {
   const { user, logout } = useAuth();
   const { unreadCount } = useNotifications();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const { theme } = useTheme();
+
+  const isDark = theme === "system"
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : theme === "dark";
+  const logoSrc = isDark ? "/logo-dark.png" : "/logo-light.png";
 
   const displayBadgeCount = unreadCount >= 10 ? "9+" : unreadCount;
 
@@ -37,7 +44,7 @@ export function Topbar() {
       <header className="flex h-14 items-center justify-between gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6">
         {/* Mobile Branding */}
         <div className="flex items-center md:hidden">
-          <img src="/logo.svg" alt="Homebase Logo" className="h-6 w-6 mr-2" />
+          <img src={logoSrc} alt="Homebase Logo" className="h-6 w-6 mr-2" />
           <h2 className="text-xl font-bold tracking-tight text-primary">
             Homebase
           </h2>
