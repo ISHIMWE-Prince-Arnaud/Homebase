@@ -35,7 +35,7 @@ async function bootstrap() {
   const isDev = process.env.NODE_ENV !== 'production';
 
   app.enableCors({
-    origin: isDev ? '*' : frontendUrl || '*',
+    origin: isDev ? 'http://localhost:5173' : frontendUrl,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     maxAge: 86400,
